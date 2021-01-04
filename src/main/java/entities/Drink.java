@@ -13,7 +13,19 @@ import clientServer.Server;
 public class Drink extends Food{
 	boolean isSparkling;
 	double alcPercent;
-	
+	enum temperature{
+		HOT,
+		COLD
+	}
+	temperature mytemp;
+	public temperature getTemperature()
+	{
+		return mytemp;
+	}
+	public void setTemperature(temperature Temperature )
+	{
+		 mytemp = Temperature;
+	}
 	public Drink(String name,String description,double price,boolean isSparkling,double alcPercent) {
 		super(name,description,price);
 		this.isSparkling = isSparkling;
@@ -80,12 +92,16 @@ public class Drink extends Food{
 		super.print();
 		if(isSparkling)
 			System.out.print("Sparkling\n");
-		//System.out.print("		");
+		System.out.print("The temperature is: ");
+		if(mytemp == temperature.HOT ) System.out.print("HOT");
+		else System.out.print("COLD");
 		if(alcPercent>0)
 		{
 			System.out.print("Alcohol Percent: ");
 			System.out.print(alcPercent);
 			System.out.print("\n");
 		}
+	
+		
 	}
 }
