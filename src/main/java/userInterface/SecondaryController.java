@@ -55,7 +55,7 @@ public class SecondaryController {
 	    }
 	    @FXML
 	    void show_menu(ActionEvent event)  throws IOException{
-	    	App.setRoot("Primary");
+	    	
 	    
 	    }
 
