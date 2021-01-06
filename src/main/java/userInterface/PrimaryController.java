@@ -18,10 +18,18 @@ public class PrimaryController {
     @FXML // fx:id="menu_text"
     private TextArea menu_text; // Value injected by FXMLLoader
 
+    @FXML // fx:id="logInBtn"
+    private Button logInBtn; // Value injected by FXMLLoader
+    
     @FXML
     void show_menu(ActionEvent event)  throws IOException{
     	menu_text.setText("hiiiiiiiii");
     	App.setRoot("Secondary");
+    }
+    
+    @FXML
+    void goto_logIn_panel(ActionEvent event)  throws IOException{
+    	App.setRoot("LogIn");
     }
 
 }
