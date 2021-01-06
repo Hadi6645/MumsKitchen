@@ -1,11 +1,13 @@
 clientServer\ChatClientCLI.class
 clientServer\ChatClientCLI$1.class
 userInterface\PrimaryController.class
+userInterface\SecondaryController$1.class
 clientServer\Client.class
 entities\Dessert.class
 entities\Drink.class
 userInterface\App.class
 entities\RestaurantMenu.class
+entities\Drink$temperature.class
 entities\Menu.class
 entities\Food.class
 clientServer\App.class
