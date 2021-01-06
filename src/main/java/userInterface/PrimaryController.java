@@ -3,6 +3,8 @@
  */
 package userInterface;
 
+import java.io.IOException;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -17,8 +19,10 @@ public class PrimaryController {
     private TextArea menu_text; // Value injected by FXMLLoader
 
     @FXML
-    void show_menu(ActionEvent event) {
+    void show_menu(ActionEvent event)  throws IOException{
     	menu_text.setText("hiiiiiiiii");
+    	App.setRoot("Secondary");
     }
+
 }
 
