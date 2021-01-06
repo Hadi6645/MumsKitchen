@@ -1,6 +1,5 @@
 package userInterface;
 
-
 import java.io.IOException;
 
 import javafx.collections.FXCollections;
