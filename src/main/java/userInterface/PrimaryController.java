@@ -53,7 +53,7 @@ public class PrimaryController {
     
     @FXML
     void goto_logIn_panel(ActionEvent event)  throws IOException{
-    	App.setRoot("LogIn");
+    	App.setRoot("LogInController");
     }
 
 }
