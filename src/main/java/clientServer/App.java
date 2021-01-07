@@ -343,7 +343,7 @@ public class App
 		//generateCostumers();
 		//generateDeals();
 		
-		/*printAllGames();
+		printAllGames();
 		System.out.print("\n");
 		printAvgRatings();
 		System.out.print("\n");

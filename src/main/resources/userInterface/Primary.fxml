@@ -15,6 +15,7 @@
             <Image url="@images/mom's%20kitchen%20logo.png" />
          </image>
       </ImageView>
+      <Button fx:id="logInBtn" layoutX="23.0" layoutY="27.0" mnemonicParsing="false" onAction="#goto_logIn_panel" text="Log in" />
       <Button fx:id="Branch1" layoutX="68.0" layoutY="313.0" mnemonicParsing="false" onAction="#show_Branch1" prefHeight="25.0" prefWidth="147.0" text="Haifa Branch" textAlignment="CENTER" textFill="#c40000" />
       <Button fx:id="Branch2" layoutX="281.0" layoutY="313.0" mnemonicParsing="false" onAction="#show_Branch2" prefHeight="25.0" prefWidth="147.0" text="Tel Aviv Branch" textAlignment="CENTER" textFill="#c40000" />
       <Button fx:id="Branch3" layoutX="68.0" layoutY="380.0" mnemonicParsing="false" onAction="#show_Branch3" prefHeight="25.0" prefWidth="147.0" text="Majdal Shams Branch" textAlignment="CENTER" textFill="#c40000" />

@@ -19,6 +19,7 @@ import entities.Food;
 import entities.Ingredients;
 import entities.Meal;
 
+
 public class ChatClientCLI {
 	
 	private static Session session;
