@@ -28,6 +28,9 @@ public class PrimaryController {
     @FXML // fx:id="Branch4"
     private Button Branch4; // Value injected by FXMLLoader
 
+    @FXML // fx:id="logInBtn"
+    private Button logInBtn; // Value injected by FXMLLoader
+    
     @FXML
     void show_Branch1(ActionEvent event) throws IOException {
     	App.setRoot("Haifa_main");
@@ -46,6 +49,11 @@ public class PrimaryController {
     @FXML
     void show_Branch4(ActionEvent event) throws IOException {
     	App.setRoot("Acre_main");
+    }
+    
+    @FXML
+    void goto_logIn_panel(ActionEvent event)  throws IOException{
+    	App.setRoot("LogIn");
     }
 
 }
