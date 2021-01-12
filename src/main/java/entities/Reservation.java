@@ -7,19 +7,19 @@ public class Reservation {
 	private int id;
 	private Client Client;
 	private int GuestsNumber;
-	//private Restaurant Restaurant;
-	private DinningSpace Space;
+	private Restaurant Restaurant;
+	private DiningSpace Space;
 	private LocalDateTime Time;
 	private CreditCard CreditCard;
 	private Status Status;
 	private String LinkToHealthReport;
 	
-	public Reservation(int id, Client Client, int GuestsNumber,DinningSpace Space, LocalDateTime Time, CreditCard CreditCard, Status Status, String LinkToHealthReport)
+	public Reservation(int id, Client Client, int GuestsNumber,DiningSpace Space, LocalDateTime Time, CreditCard CreditCard, Status Status, String LinkToHealthReport, Restaurant Restaurant)
 	{
 		 this.id  = id;
 		this.Client = Client;
 		this.GuestsNumber = GuestsNumber;
-		//private Restaurant Restaurant;
+		this.Restaurant = Restaurant;
 		this.Space = Space;
 		this.Time = Time;
 		this.CreditCard = CreditCard;
@@ -27,11 +27,11 @@ public class Reservation {
 		this.LinkToHealthReport  = LinkToHealthReport;
 	}
 	
-	public Reservation(Client Client, int GuestsNumber,DinningSpace Space, LocalDateTime Time, CreditCard CreditCard, String LinkToHealthReport)
+	public Reservation(Client Client, int GuestsNumber,DiningSpace Space, LocalDateTime Time, CreditCard CreditCard, String LinkToHealthReport, Restaurant Restaurant)
 	{
 		this.Client = Client;
 		this.GuestsNumber = GuestsNumber;
-		//private Restaurant Restaurant;
+		this.Restaurant = Restaurant;
 		this.Space = Space;
 		this.Time = Time;
 		this.CreditCard = CreditCard;
@@ -51,12 +51,12 @@ public class Reservation {
 		 return GuestsNumber;
 	 }
 	  
-	/*public  Restaurant getRestaurant()
+	public  Restaurant getRestaurant()
 	{
 		return Restaurant;
-	}*/
+	}
 	 
-	 public DinningSpace getSpace()
+	 public DiningSpace getSpace()
 	 {
 		 return Space;
 	 }
