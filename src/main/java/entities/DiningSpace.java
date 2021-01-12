@@ -12,7 +12,7 @@ import enums.Type;
 
 @Entity
 @Table(name = "dinningspace")
-public class DinningSpace {
+public class DiningSpace {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
@@ -22,7 +22,7 @@ public class DinningSpace {
     
     private boolean isSmokingAllowed;
     
-    public DinningSpace(Type type, boolean isSmokingAllowed)
+    public DiningSpace(Type type, boolean isSmokingAllowed)
     {
     	this.type = type;
     	this.isSmokingAllowed = isSmokingAllowed;

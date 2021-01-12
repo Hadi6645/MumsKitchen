@@ -9,7 +9,6 @@ public class Client {
 	String Email;
 	Address Address;
 	private List<CreditCard> CreditCard;
-	//CreditCard CreditCard[];
 	int id;
 	
 	public Client(String FirstName,String LastName, String Phone,
