@@ -24,7 +24,7 @@ public class RestaurantMenu {
 	
 	public RestaurantMenu(BaseMenu common,Menu ind) {
 		this.common = common;
-		indvidual = ind;
+		this.indvidual = ind;
 	}
 	public BaseMenu getcommon()
 	{

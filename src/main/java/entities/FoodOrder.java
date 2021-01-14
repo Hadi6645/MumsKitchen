@@ -14,8 +14,8 @@ import enums.FoodOrder_Status;
 @Table(name = "foodorder")
 public class FoodOrder {
 
-	//@Id
-	//@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
 	private Menu Order;
