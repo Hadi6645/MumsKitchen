@@ -35,14 +35,16 @@ public class ChatClientCLI {
 		/*configuration.addAnnotatedClass(Game.class);
 		configuration.addAnnotatedClass(Costumer.class);
 		configuration.addAnnotatedClass(CostumerGame.class);*/
-		configuration.addAnnotatedClass(Meal.class);
+		/*configuration.addAnnotatedClass(Meal.class);
 		configuration.addAnnotatedClass(BaseMenu.class);
 		configuration.addAnnotatedClass(Dessert.class);
 		configuration.addAnnotatedClass(Food.class);
 		configuration.addAnnotatedClass(Ingredients.class);
 		configuration.addAnnotatedClass(Meal.class);
-		configuration.addAnnotatedClass(Drink.class);
+		configuration.addAnnotatedClass(Drink.class);*/
 		//configuration.addAnnotatedClass(RestaurantMenu.class);
+		configuration.addPackage("entities");
+		configuration.addPackage("control");
 		ServiceRegistry serviceRegistry= new StandardServiceRegistryBuilder()
 				.applySettings(configuration.getProperties()).build();
 		return configuration.buildSessionFactory(serviceRegistry);
