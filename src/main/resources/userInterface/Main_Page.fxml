@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane prefHeight="500.0" prefWidth="500.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.1" fx:controller="userInterface.Main_Page">
+   <children>
+      <ImageView fitHeight="500.0" fitWidth="500.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/logo2.png" />
+         </image>
+      </ImageView>
+      <Button fx:id="show_menu_B" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#show_menu_act" prefHeight="25.0" prefWidth="121.0" text="Show Menu" textAlignment="CENTER" textFill="#1812d5" />
+      <Button fx:id="cancelation_B" layoutX="13.0" layoutY="173.0" mnemonicParsing="false" onAction="#cancelation_act" prefHeight="25.0" prefWidth="121.0" text="Cancelation" textFill="#1812d5" />
+      <Button fx:id="complaint_B" layoutX="13.0" layoutY="231.0" mnemonicParsing="false" onAction="#complaint_act" prefHeight="25.0" prefWidth="121.0" text="Filing a Complaint" textFill="#1812d5" />
+      <Button fx:id="food_order_B" layoutX="14.0" layoutY="63.0" mnemonicParsing="false" onAction="#food_order_act" text="Order Management" textFill="#1812d5" />
+      <Button fx:id="reservation_B" layoutX="14.0" layoutY="121.0" mnemonicParsing="false" onAction="#reservation_act" prefHeight="25.0" prefWidth="121.0" text="Reservation" textFill="#1812d5" />
+      <Button fx:id="aboutus_B" layoutX="400.0" layoutY="38.0" mnemonicParsing="false" onAction="#aboutus_act" text="About Us" textFill="#1812d5" />
+   </children>
+</AnchorPane>
