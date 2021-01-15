@@ -105,4 +105,7 @@ private static Session session;
 		server.listen();
 		
 	}
+	
+	
+	//connection close, connection established
 }

@@ -1,7 +1,12 @@
 package entities;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
 import enums.EmployeeRole;
 
+@Entity
+@Table(name = "employee")
 public class Employee {
 	private String id;
 	private String password;
