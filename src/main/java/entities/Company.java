@@ -1,5 +1,6 @@
 package entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -17,10 +18,15 @@ public class Company {
 	
 	private Employee CEO;
 	private Employee Dietitian;
+	public Company ()
+	{
+		
+	}
 	
 	public Company (Employee CEO,Employee Dietitian ) {
 		this.CEO = CEO;
 		this.Dietitian = Dietitian;
+		Restaurants = new ArrayList<Restaurant>();
 	}
 	
 	public Company (List<Restaurant> restaurants) {
