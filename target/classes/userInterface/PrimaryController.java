@@ -1,7 +1,7 @@
 /**
  * Sample Skeleton for 'Primary.fxml' Controller Class
  */
-/////
+
 package userInterface;
 
 import java.io.IOException;
