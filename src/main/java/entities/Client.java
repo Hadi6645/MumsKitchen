@@ -2,30 +2,14 @@ package entities;
 
 import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-
-@Entity
-@Table(name = "client")
-
-	
-	
 public class Client {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	int id;
 	String FirstName;
 	String LastName;
 	String Phone;
 	String Email;
 	Address Address;
 	private List<CreditCard> CreditCard;
-	
+	int id;
 	
 	public Client(String FirstName,String LastName, String Phone,
 	String Email,

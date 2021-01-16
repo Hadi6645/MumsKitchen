@@ -23,6 +23,11 @@ public class Restaurant {
 	private List<DiningSpace> Spaces;
 	private RestaurantMenu Menu;
 	
+	
+	public Restaurant() {
+		
+	}
+	
 	public Restaurant(int id, String Name, Address Address, String Telephone, List<Employee> Staff, OpeningHours Hours, List<DiningSpace> Spaces, RestaurantMenu Menu)
 	{
 		this.id =  id;

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane prefHeight="500.0" prefWidth="500.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.1" fx:controller="userInterface.Show_Menu">
+   <children>
+      <ListView fx:id="meals_list" layoutX="33.0" layoutY="250.0" prefHeight="200.0" prefWidth="127.0" />
+      <ListView fx:id="drinks_list" layoutX="191.0" layoutY="250.0" prefHeight="200.0" prefWidth="127.0" />
+      <ListView fx:id="desserts_list" layoutX="343.0" layoutY="250.0" prefHeight="200.0" prefWidth="127.0" />
+      <ImageView fitHeight="150.0" fitWidth="184.0" layoutX="178.0" layoutY="43.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/you_are_what_you_eat.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="43.0" fitWidth="54.0" layoutX="75.0" layoutY="201.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/meals.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="43.0" fitWidth="43.0" layoutX="235.0" layoutY="201.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/drinks.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="43.0" fitWidth="43.0" layoutX="386.0" layoutY="201.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/dessert.png" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>

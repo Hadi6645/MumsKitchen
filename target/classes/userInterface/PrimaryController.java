@@ -5,55 +5,88 @@
 package userInterface;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
+import entities.Company;
+import entities.Restaurant;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.image.ImageView;
+import javafx.scene.control.ListView;
+import javafx.scene.control.ListCell;
 
 public class PrimaryController {
 
-    @FXML // fx:id="logo"
-    private ImageView logo; // Value injected by FXMLLoader
-
-    @FXML // fx:id="Branch1"
-    private Button Branch1; // Value injected by FXMLLoader
-
-    @FXML // fx:id="Branch2"
-    private Button Branch2; // Value injected by FXMLLoader
-
-    @FXML // fx:id="Branch3"
-    private Button Branch3; // Value injected by FXMLLoader
-
-    @FXML // fx:id="Branch4"
-    private Button Branch4; // Value injected by FXMLLoader
-
-    @FXML // fx:id="logInBtn"
-    private Button logInBtn; // Value injected by FXMLLoader
+    @FXML // fx:id="listView_2"
+    private ListView<String> listView_2; // Value injected by FXMLLoader
+    private ObservableList<String> listViewData1 = FXCollections.observableArrayList();
     
-    @FXML
-    void show_Branch1(ActionEvent event) throws IOException {
-    	App.setRoot("Haifa_main");
-    }
-
-    @FXML
-    void show_Branch2(ActionEvent event) throws IOException {
-    	App.setRoot("Telaviv_main");
-    }
-
-    @FXML
-    void show_Branch3(ActionEvent event) throws IOException {
-    	App.setRoot("Majdal_main");
-    }
-
-    @FXML
-    void show_Branch4(ActionEvent event) throws IOException {
-    	App.setRoot("Acre_main");
-    }
+    @FXML // fx:id="login_B"
+    private Button login_B; // Value injected by FXMLLoader
     
+    private static Restaurant My_res;
+    private static String val;
     @FXML
-    void goto_logIn_panel(ActionEvent event)  throws IOException{
-    	App.setRoot("LogInController");
+    public void initialize() {
+    // String val = null;
+     	Company company = new Company();
+         company = App.start_company();
+        //listView_2 = (ListView<Restaurant>) company.getRestaurants();
+         List<Restaurant> res = new ArrayList<Restaurant>();
+        res = company.getRestaurants();
+        for(int i=0; i<res.size();i++) {
+     	   listViewData1.add(res.get(i).getName());
+        }
+        
+        // Init ListView.
+        listView_2.setItems(listViewData1);
+        listView_2.setCellFactory((list) -> {
+            return new ListCell<String>() {
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+
+                    if (item == null || empty) {
+                        setText(null);
+                    } else {
+                        setText(item);
+                    }
+                }
+            };
+        });
+        
+        
+     // Handle ListView selection changes.
+        listView_2.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+        	val = newValue;
+            System.out.println("ListView Selection Changed (selected: " + newValue + ")");
+           try {
+         	  show_Restaurant(null);
+ 		} catch (IOException e) {
+ 			// TODO Auto-generated catch block
+ 			e.printStackTrace();
+ 		}
+        });
+        
+        for(int i=0; i<res.size();i++) {
+    		if(res.get(i).getName() == val) {
+    			My_res = res.get(i);
+    		}
+    	}
+        
+     }
+    
+    public static Restaurant get_Restaurant() {
+    	return My_res;
     }
+
+     @FXML
+     void show_Restaurant(ActionEvent event) throws IOException {
+           App.setRoot("Main_Page");
+     }
 
 }
+

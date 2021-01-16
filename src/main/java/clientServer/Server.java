@@ -1,10 +1,6 @@
 package clientServer;
 
-
-
-
 import java.io.BufferedReader;
-import java.io.Console;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
@@ -17,13 +13,8 @@ import org.hibernate.service.ServiceRegistry;
 
 import control.ServerInstruction;
 import control.ServerInstructionType;
-import entities.BaseMenu;
-import entities.Dessert;
-import entities.Drink;
 import entities.Employee;
 import entities.Food;
-import entities.Ingredients;
-import entities.Meal;
 import server.ocsf.server.AbstractServer;
 import server.ocsf.server.ConnectionToClient;
 
@@ -105,8 +96,6 @@ public class Server extends AbstractServer {
 		return true;
 	}
 	
-	
-	
 	public Server(int port) {
 		super(port);
 	}
@@ -174,4 +163,7 @@ public class Server extends AbstractServer {
 		server.listen();
 		
 	}
+	
+	
+	//connection close, connection established
 }
