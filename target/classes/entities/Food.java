@@ -79,7 +79,7 @@ public void print()
 public boolean update() throws Exception
 {
 	System.out.print("Product "+id+" update:\n");
-	session = ChatClientCLI.getSession();
+	session = Server.getSession();
 	BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 	String newName,newDesc,newPrice;
 	boolean flag = false;

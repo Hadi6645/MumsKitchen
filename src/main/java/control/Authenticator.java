@@ -1,5 +1,10 @@
-package control;import java.util.Map;
+package control;import java.io.IOException;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
+import clientServer.ChatClientCLI;
+import clientServer.Client;
 import entities.Employee;
 import enums.EmployeeRole;
 
@@ -22,9 +27,26 @@ public class Authenticator {
 	public boolean logIn(String id, String password) { //TODO continue
 		// send log-in info to the server
 		String[] data = {id, password};
-		ServerInstruction instruction = new ServerInstruction(ServerInstructionType.CHECK_EMPLOYEE_EXISTS, data);
-		// send instruction to the server and get a response
+		ServerInstruction sInstruction = new ServerInstruction(ServerInstructionType.CHECK_EMPLOYEE_EXISTS, data);
+		ChatClientCLI clientCli = new ChatClientCLI(new Client());
 		boolean response = false;
+		// send instruction to the server and get a response
+		CompletableFuture<Object> completableFuture = new CompletableFuture<Object>();
+		try {
+			clientCli.sendInstructionToServer(sInstruction,completableFuture);
+			while (!completableFuture.isDone()) {
+			    // waiting
+			}
+			try {
+				response = (boolean)completableFuture.get();
+			} catch (InterruptedException | ExecutionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		if (response) {
 			this.cachedEmployees.putIfAbsent(id, password);
 		}
@@ -37,23 +59,10 @@ public class Authenticator {
 	}
 	
 	public boolean isEmployeeLoggedIn(String id) {
-		// send log-in info to the server
 		if(this.cachedEmployees.get(id) != null) {
 			return true;
 		}
 		return false;
-	}
-	
-	public boolean requestUpdateMenuPermission(String id) { // TODO continue
-		if (this.cachedEmployees.get(id) == null) {
-			return false;
-		}
-		// send log-in info to the server
-		String data = id;
-		ServerInstruction instruction = new ServerInstruction(ServerInstructionType.CHECK_EMPLOYEE_IS_DIETITION, data);
-		// send instruction to the server and get a response
-		boolean response = false;
-		return response;
 	}
 	
 	public boolean requestUpdateMenuPermission(Employee employee) {

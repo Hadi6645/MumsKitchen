@@ -15,9 +15,12 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
+import control.ServerInstruction;
+import control.ServerInstructionType;
 import entities.BaseMenu;
 import entities.Dessert;
 import entities.Drink;
+import entities.Employee;
 import entities.Food;
 import entities.Ingredients;
 import entities.Meal;
@@ -26,28 +29,82 @@ import server.ocsf.server.ConnectionToClient;
 
 public class Server extends AbstractServer {
 	
-private static Session session;
-	
-	
-	private static SessionFactory getSessionFactory() throws HibernateException
+	private static Session session;
+	public static Session getSession()
+	{
+		return session;
+	}
+	private SessionFactory getSessionFactory() throws HibernateException
 	{
 		Configuration configuration= new Configuration();
-		// Add ALL of your entities here. You can also try adding a whole package.
-		/*configuration.addAnnotatedClass(Game.class);
-		configuration.addAnnotatedClass(Costumer.class);
-		configuration.addAnnotatedClass(CostumerGame.class);*/
-		configuration.addAnnotatedClass(Meal.class);
-		configuration.addAnnotatedClass(BaseMenu.class);
-		configuration.addAnnotatedClass(Dessert.class);
-		configuration.addAnnotatedClass(Food.class);
-		configuration.addAnnotatedClass(Ingredients.class);
-		configuration.addAnnotatedClass(Meal.class);
-		configuration.addAnnotatedClass(Drink.class);
-		//configuration.addAnnotatedClass(RestaurantMenu.class);
+		configuration.addPackage("entities");
+		configuration.addPackage("control");
 		ServiceRegistry serviceRegistry= new StandardServiceRegistryBuilder()
 				.applySettings(configuration.getProperties()).build();
 		return configuration.buildSessionFactory(serviceRegistry);
 	}
+	
+	private void initializeDatabase() {
+		try{
+		    SessionFactory sessionFactory= this.getSessionFactory();
+			session = sessionFactory.openSession();
+			session.beginTransaction();
+			
+			App.generateIngredient();
+			App.generateMeals();
+			App.generateDrinks();
+			App.generateDesserts();
+
+		} catch(Exception exception) {
+			if(session != null)
+			{
+				session.getTransaction().rollback();
+			}
+			System.err.println("An error occured - cannot initialize database, changes have been rolled back.");
+			exception.printStackTrace();
+		} finally{
+			session.close();
+		}
+	}
+	
+	private boolean addToDatabase(Object data) {
+		try {
+			session.save(data);
+			session.flush();
+			return true;
+			//finally block is executed always even if you put a return statement in the try block. 
+			//The finally block will be executed before the return statement.
+		} catch(Exception exception) {
+			if(session != null)
+			{
+				session.getTransaction().rollback();
+			}
+			System.err.println("An error occured- cannot add to database, changes have been rolled back.");
+			exception.printStackTrace();
+			// The finally block will be executed before the return statement.
+			return false;
+		} finally{
+			session.close();
+		}
+	}
+	
+	private boolean checkEmployeeExists(Object data) {
+		String[] info = (String[])(data);
+		if(info == null) {
+			// log error
+			return false;
+		}
+		// check in database
+		session = getSession();
+		Employee emp =  (Employee)session.get(Employee.class, info[0]);
+		if(emp == null || emp.getPassword() != info[1]) { // if not found or wrong password
+			session.close();
+			return false;
+		}
+		session.close();
+		return true;
+	}
+	
 	
 	
 	public Server(int port) {
@@ -56,9 +113,31 @@ private static Session session;
 
 	@Override
 	protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
-		System.out.println("Received Message: " + msg.toString());
-		sendToAllClients(msg);
-		
+		// we need a switch
+		ServerInstruction sInstruction = (ServerInstruction)(msg);
+		if (sInstruction == null) {
+			System.err.println("cannot handle message from client, sInstruction is null.");
+			return;
+		}
+		ServerInstructionType instruction = sInstruction.getInstruction();
+		Object data = sInstruction.getData();
+		Object response = null;
+		switch(instruction) {
+		case CHECK_EMPLOYEE_EXISTS: response = this.checkEmployeeExists(data);
+			break;
+		default:
+			break;
+		}
+		if (response == null) {
+			return; // no need to send anything back to the client
+		}
+		try {
+			client.sendToClient(response);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			System.err.println("cannot send respone to client.");
+			e.printStackTrace();
+		}
 	}
 	
 	
@@ -89,19 +168,9 @@ private static Session session;
 		else return false;
 	}
 	public static void main(String[] args) throws IOException {
-	/*	if (args.length != 1) {
-			System.out.println("Required argument: <port>");
-		} else {
-			SimpleChatServer server = new SimpleChatServer(Integer.parseInt(args[0]));
-			server.listen();
-		
-		}*/
-		Server server = new Server(3002);
-		
-		
+		Server server = new Server(3000); //change this port to something else if you want, but remember to update the client's constructor
 		System.out.println("Server On!");
-		
-		
+		server.initializeDatabase();
 		server.listen();
 		
 	}

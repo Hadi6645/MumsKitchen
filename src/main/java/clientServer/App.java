@@ -31,33 +31,9 @@ public class App
 {
 	
 	private static Session session;
-	
-	/*private static SessionFactory getSessionFactory() throws HibernateException
-	{
-		Configuration configuration= new Configuration();
-		// Add ALL of your entities here. You can also try adding a whole package.
-		/*configuration.addAnnotatedClass(Game.class);
-		configuration.addAnnotatedClass(Costumer.class);
-		configuration.addAnnotatedClass(CostumerGame.class);
-		configuration.addAnnotatedClass(Meal.class);
-		configuration.addAnnotatedClass(BaseMenu.class);
-		configuration.addAnnotatedClass(Dessert.class);
-		configuration.addAnnotatedClass(Food.class);
-		configuration.addAnnotatedClass(Ingredients.class);
-		configuration.addAnnotatedClass(Meal.class);
-		configuration.addAnnotatedClass(Drink.class);
-		//configuration.addAnnotatedClass(RestaurantMenu.class);
-		ServiceRegistry serviceRegistry= new StandardServiceRegistryBuilder()
-				.applySettings(configuration.getProperties()).build();
-		return configuration.buildSessionFactory(serviceRegistry);
-	}*/
-	
 	public static void generateIngredient() throws Exception
 	{
-		/*SessionFactory sessionFactory= getSessionFactory();
-		session = sessionFactory.openSession();
-		session.beginTransaction();*/
-		session = ChatClientCLI.getSession();
+		session = Server.getSession();
 		Ingredients salt = new Ingredients("salt");
 		Ingredients pepper = new Ingredients("pepper");
 		Ingredients meat = new Ingredients("meat");
@@ -90,7 +66,7 @@ public class App
 	}
 	private static List<Ingredients> getAllIngredients() throws Exception
 	{
-		session = ChatClientCLI.getSession();
+		session = Server.getSession();
 		CriteriaBuilder builder= session.getCriteriaBuilder();
 		CriteriaQuery<Ingredients> query= builder.createQuery(Ingredients.class);
 		query.from(Ingredients.class);
@@ -106,7 +82,7 @@ public class App
 	}
 	public static void generateMeals() throws Exception
 	{
-		session = ChatClientCLI.getSession();
+		session = Server.getSession();
 		List<Ingredients> ingr = getAllIngredients();
 		List<Ingredients> burgerIng = new ArrayList<Ingredients>();
 		burgerIng.add(ingr.get(0));
@@ -138,7 +114,7 @@ public class App
 	
 	private static List<Meal> getAllMeals() throws Exception
 	{
-		session = ChatClientCLI.getSession();
+		session = Server.getSession();
 		CriteriaBuilder builder= session.getCriteriaBuilder();
 		CriteriaQuery<Meal> query= builder.createQuery(Meal.class);
 		query.from(Meal.class);
@@ -148,7 +124,7 @@ public class App
 	
 	public static void generateDrinks() throws Exception
 	{
-		session = ChatClientCLI.getSession();
+		session = Server.getSession();
 		Drink cocacola = new Drink("CocaCola","330ml Sparkling Cola drink in a can",8.50,true,0);
 		Drink appleJuice = new Drink("Apple Juice","Pregat apple juice 500ml in a bottle",8,false,0);
 		Drink carlsberg = new Drink("Carlsberg beer","330ml glass carlsberg beer bottle",25,false,5);
@@ -161,7 +137,7 @@ public class App
 	
 	private static List<Drink> getAllDrinks() throws Exception
 	{
-		session = ChatClientCLI.getSession();
+		session = Server.getSession();
 		CriteriaBuilder builder= session.getCriteriaBuilder();
 		CriteriaQuery<Drink> query= builder.createQuery(Drink.class);
 		query.from(Drink.class);
@@ -171,7 +147,7 @@ public class App
 	
 	public static void generateDesserts() throws Exception
 	{
-		session = ChatClientCLI.getSession();
+		session = Server.getSession();
 		List<Ingredients> ingr = getAllIngredients();
 		List<Ingredients> cheesecakeIng = new ArrayList<Ingredients>();
 		cheesecakeIng.add(ingr.get(4));
@@ -205,7 +181,7 @@ public class App
 	
 	private static List<Dessert> getAllDesserts() throws Exception
 	{
-		session = ChatClientCLI.getSession();
+		session = Server.getSession();
 		CriteriaBuilder builder= session.getCriteriaBuilder();
 		CriteriaQuery<Dessert> query= builder.createQuery(Dessert.class);
 		query.from(Dessert.class);
@@ -259,7 +235,7 @@ public class App
 	}
 	private static List<Food> getAllFood() throws Exception
 	{
-		session = ChatClientCLI.getSession();
+		session = Server.getSession();
 		CriteriaBuilder builder= session.getCriteriaBuilder();
 		CriteriaQuery<Food> query= builder.createQuery(Food.class);
 		query.from(Food.class);
@@ -327,46 +303,4 @@ public class App
 		}
 		//session.flush();
 	}
-	
-	/*public static void main( String[] args)
-	{
-		
-		try{SessionFactory sessionFactory= getSessionFactory();
-		session = sessionFactory.openSession();
-		session.beginTransaction();
-		
-		generateIngredient();
-		generateMeals();
-		generateDrinks();
-		generateDesserts();
-		//generateGames();
-		//generateCostumers();
-		//generateDeals();
-		
-		printAllGames();
-		System.out.print("\n");
-		printAvgRatings();
-		System.out.print("\n");
-		printAllCostumersSorted();
-		System.out.print("\n");
-		printMostSpent();
-		//printAlldeals();
-		viewMenu();
-		System.out.print("\n");
-		//session.getTransaction().commit();// Save everything.
-		System.out.println("Done!");
-		} 
-		catch(Exception exception)
-		{
-			if(session != null)
-			{
-				session.getTransaction().rollback();
-			}
-			System.err.println("An error occured, changes have been rolled back.");
-			exception.printStackTrace();
-			}
-		finally{session.close();
-		}
-		//System.out.print("It's working!");
-	}*/
 }

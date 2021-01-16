@@ -1,9 +1,8 @@
-5package entities;
+package entities;
 
 import java.util.List;
 
 import javax.persistence.Entity;
-import javax.persistence.Table;
 
 @Entity
 public class BaseMenu extends Menu{

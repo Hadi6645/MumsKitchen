@@ -1,186 +1,71 @@
 package clientServer;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Scanner;
+import java.util.concurrent.CompletableFuture;
 
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.service.ServiceRegistry;
-
-import entities.BaseMenu;
-import entities.Dessert;
-import entities.Drink;
-import entities.Food;
-import entities.Ingredients;
-import entities.Meal;
+import control.ServerInstruction;
 
 
 public class ChatClientCLI {
 	
-	private static Session session;
-	
-	public static Session getSession()
-	{
-		return session;
-	}
-	private static SessionFactory getSessionFactory() throws HibernateException
-	{
-		Configuration configuration= new Configuration();
-		// Add ALL of your entities here. You can also try adding a whole package.
-		/*configuration.addAnnotatedClass(Game.class);
-		configuration.addAnnotatedClass(Costumer.class);
-		configuration.addAnnotatedClass(CostumerGame.class);*/
-		configuration.addAnnotatedClass(Meal.class);
-		configuration.addAnnotatedClass(BaseMenu.class);
-		configuration.addAnnotatedClass(Dessert.class);
-		configuration.addAnnotatedClass(Food.class);
-		configuration.addAnnotatedClass(Ingredients.class);
-		configuration.addAnnotatedClass(Meal.class);
-		configuration.addAnnotatedClass(Drink.class);
-		//configuration.addAnnotatedClass(RestaurantMenu.class);
-		ServiceRegistry serviceRegistry= new StandardServiceRegistryBuilder()
-				.applySettings(configuration.getProperties()).build();
-		return configuration.buildSessionFactory(serviceRegistry);
-	}
-	
 	private Client client;
-	private boolean isRunning;
-	private static final String SHELL_STRING = "Enter message (or exit to quit)> ";
-	private Thread loopThread;
+	private Thread requestThread;
+	private CompletableFuture<Object> completableFuture;
 
 	public ChatClientCLI(Client client) {
 		this.client = client;
-		this.isRunning = false;
 	}
 
-	public void loop() throws IOException {
-		loopThread = new Thread(new Runnable() {
+	public void sendInstructionToServer(ServerInstruction sInstruction, CompletableFuture<Object> completableFuture) throws IOException {
+		this.completableFuture = completableFuture;
+		if (sInstruction == null) {
+			System.out.print("cannot send request to server - sInstruction is null");
+			this.completableFuture.cancel(true); //send CancelException to waiting client
+			return;
+		}
+		requestThread = new Thread(new Runnable() {
 
 			public void run() {
 				
-				try{SessionFactory sessionFactory= getSessionFactory();
-				session = sessionFactory.openSession();
-				session.beginTransaction();
-				
-				App.generateIngredient();
-				App.generateMeals();
-				App.generateDrinks();
-				App.generateDesserts();
-				
-				BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-				String message, foodid,changeid;
-				while (client.isConnected()) {
-					System.out.print(SHELL_STRING);
-
+				try{
+					boolean isConnected = client.openConnectionWithServer();
+					if (!isConnected) {
+						System.err.println("An error occured,cannot connect to server.");
+						return;
+					}
+					client.sendToServer(sInstruction);
+					client.closeConnection();
+				} catch (IOException e1) {
+					System.err.println("An error occured,cannot send reuqest to server.");
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (NumberFormatException e) {
+					// TODO Auto-generated catch block
+					System.err.println("An error occured,cannot send reuqest to server.");
+					e.printStackTrace();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					System.err.println("An error occured,cannot send reuqest to server.");
+					e.printStackTrace();
+				} finally {
 					try {
-						message = reader.readLine();
-						if (message.length()==0)
-							continue;
-						
-						if (message.equalsIgnoreCase("menu")) {
-							//String[] empty = null;
-							App.viewMenu();
-							System.out.println("\nMenu generated successfully.");
+						if(client.isConnected()) {
+							client.closeConnection();
 						}
-						
-						if (message.equalsIgnoreCase("food")) {
-							System.out.println("Enter the meal you would like to view.");
-							foodid = reader.readLine();
-							App.printmealbyiD(Integer.parseInt(foodid));
-						}
-						
-						if (message.equalsIgnoreCase("change")) {
-							System.out.println("Enter the product you would like to change.");
-							changeid = reader.readLine();
-							App.getMeal(Integer.parseInt(changeid)).update();
-							
-						}
-						
-						if (message.equalsIgnoreCase("exit")) {
-							System.out.println("Closing connection.");
-								client.closeConnection();
-						} else {
-							//client.sendToServer(message);
-							sendMessage(message);
-						}
-					} catch (IOException e1) {
+					} catch (IOException e) {
 						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} catch (NumberFormatException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
+						System.err.println("cannot close connection.");
 						e.printStackTrace();
 					}
-
-				}
-				}
-				catch(Exception exception)
-				{
-					if(session != null)
-					{
-						session.getTransaction().rollback();
-					}
-					System.err.println("An error occured, changes have been rolled back.");
-					exception.printStackTrace();
-					}
-				finally{session.close();
 				}
 			}
 		});
-
-		loopThread.start();
-		this.isRunning = true;
-
-	}
-
-	public void displayMessage(Object message) {
-		if (isRunning) {
-			System.out.print("(Interrupted)\n");
-		}
-		System.out.println("Received message from server: " + message.toString());
-		if (isRunning)
-			System.out.print(SHELL_STRING);
-	}
-
-	public void closeConnection() {
-		System.out.println("Connection closed.");
-		System.exit(0);
+		requestThread.start();
 	}
 	
-	public void sendMessage(String message)
-	{
-		String messageToSend = message;
-		boolean isSendSubmitters = messageToSend.startsWith("#sendSubmitters");
-		boolean isSend = messageToSend.startsWith("#send") && !isSendSubmitters;
-		boolean isExit = messageToSend.startsWith("#exit");
-		if(isSendSubmitters) {
-			messageToSend = "Anis, Hadi"; 
-		}
-		if(isSend) {
-			messageToSend = messageToSend.replaceFirst("#send ",""); 
-		}
-		if(isExit) {
-			try {
-				System.out.println("Closing connection.");
-				client.closeConnection();
-			} catch (IOException e1) {
-			 	// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		} else {
-			try {
-				client.sendToServer(messageToSend);
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		}
+	public void handleMessageFromServer(Object msg) {
+		//write something
+		this.completableFuture.complete(msg); // send result to the waiting client
 	}
+	
 }
