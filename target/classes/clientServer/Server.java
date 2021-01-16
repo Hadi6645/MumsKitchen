@@ -45,6 +45,7 @@ public class Server extends AbstractServer {
 			App.generateMeals();
 			App.generateDrinks();
 			App.generateDesserts();
+			App.generateEmployees();
 
 		} catch(Exception exception) {
 			if(session != null)

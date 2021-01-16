@@ -20,11 +20,13 @@ import org.hibernate.service.ServiceRegistry;
 import entities.BaseMenu;
 import entities.Dessert;
 import entities.Drink;
+import entities.Employee;
 import entities.Food;
 import entities.Ingredients;
 import entities.Meal;
 import entities.Menu;
 import entities.RestaurantMenu;
+import enums.EmployeeRole;
 
 
 public class App
@@ -302,5 +304,16 @@ public class App
 			dessert.print();
 		}
 		//session.flush();
+	}
+	public static void generateEmployees() throws Exception
+	{
+		session = Server.getSession();
+		Employee ceo = new Employee("123456789","1234","Lia","Komo",EmployeeRole.CEO);
+		Employee dietition = new Employee("987654321","1234","Mat","Blob",EmployeeRole.DIETITION);
+		Employee manager = new Employee("012345678","1234","Karmen","Jungle",EmployeeRole.MANAGER);
+		session.save(ceo); //0
+		session.save(dietition); //1
+		session.save(manager); //2
+		session.flush();
 	}
 }

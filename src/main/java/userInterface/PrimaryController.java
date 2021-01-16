@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import control.Authenticator;
 import entities.Company;
 import entities.Restaurant;
 import javafx.collections.FXCollections;
@@ -87,6 +88,12 @@ public class PrimaryController {
      void show_Restaurant(ActionEvent event) throws IOException {
            App.setRoot("Main_Page");
      }
+     
+     @FXML
+     void goTologIn(ActionEvent event)  throws IOException{
+    	 App.setRoot("LogInController");
+     }
+
 
 }
 
