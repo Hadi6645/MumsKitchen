@@ -6,6 +6,22 @@ package server.ocsf.server;
 
 import java.net.*;
 import java.util.*;
+
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.service.ServiceRegistry;
+
+import clientServer.App;
+import entities.BaseMenu;
+import entities.Dessert;
+import entities.Drink;
+import entities.Food;
+import entities.Ingredients;
+import entities.Meal;
+
 import java.io.*;
 
 /**
@@ -121,6 +137,7 @@ public abstract class AbstractServer implements Runnable
    * instances will be created. Added in version 2.3
    */
   private AbstractConnectionFactory connectionFactory = null;
+  
   
 // CONSTRUCTOR ******************************************************
 
@@ -376,7 +393,8 @@ public abstract class AbstractServer implements Runnable
   {
     this.connectionFactory = factory;
   }
-
+  
+  
 // RUN METHOD -------------------------------------------------------
 
   /**
@@ -388,7 +406,7 @@ public abstract class AbstractServer implements Runnable
     // call the hook method to notify that the server is starting
     readyToStop= false;  // added in version 2.31
     serverStarted();
-
+   
     try
     {
       // Repeatedly waits for a new client connection, accepts it, and
@@ -397,6 +415,7 @@ public abstract class AbstractServer implements Runnable
       {
         try
         {
+        	
           // Wait here for new connection attempts, or a timeout
           Socket clientSocket = serverSocket.accept();
 
@@ -424,7 +443,8 @@ public abstract class AbstractServer implements Runnable
         {
           // This will be thrown when a timeout occurs.
           // The server will continue to listen if not ready to stop.
-        }
+        } 
+        
       }
     }
     catch (IOException exception)

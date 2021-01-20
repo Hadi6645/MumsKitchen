@@ -55,7 +55,7 @@ public List<Ingredients> getOptIng()
 public boolean update() throws Exception
 {
 	super.update();
-	session = ChatClientCLI.getSession();
+	session = Server.getSession();
 	BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 	List<Ingredients> newIngsadd =new ArrayList<Ingredients>();
 	List<Ingredients> newOptIngsadd =new ArrayList<Ingredients>();

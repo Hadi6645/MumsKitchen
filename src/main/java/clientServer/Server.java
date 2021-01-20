@@ -4,7 +4,6 @@ package clientServer;
 
 
 import java.io.BufferedReader;
-import java.io.Console;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
@@ -26,16 +25,20 @@ import server.ocsf.server.ConnectionToClient;
 
 public class Server extends AbstractServer {
 	
-private static Session session;
+	private static boolean isRunning;
+	private static Thread loopThread;
 	
+	private static Session session;
+
+	public static Session getSession()
+	{
+		return session;
+	}
 	
-	private static SessionFactory getSessionFactory() throws HibernateException
+	public static SessionFactory getSessionFactory() throws HibernateException
 	{
 		Configuration configuration= new Configuration();
 		// Add ALL of your entities here. You can also try adding a whole package.
-		/*configuration.addAnnotatedClass(Game.class);
-		configuration.addAnnotatedClass(Costumer.class);
-		configuration.addAnnotatedClass(CostumerGame.class);*/
 		configuration.addAnnotatedClass(Meal.class);
 		configuration.addAnnotatedClass(BaseMenu.class);
 		configuration.addAnnotatedClass(Dessert.class);
@@ -50,15 +53,16 @@ private static Session session;
 	}
 	
 	
-	public Server(int port) {
+	public Server(int port) throws IOException {
 		super(port);
+		Server.isRunning = false;
 	}
 
 	@Override
 	protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
 		System.out.println("Received Message: " + msg.toString());
-		sendToAllClients(msg);
-		
+		//sendToAllClients(msg);
+		listener(msg);
 	}
 	
 	
@@ -78,6 +82,10 @@ private static Session session;
 		super.clientConnected(client);
 		System.out.println("Client connected: " + client.getInetAddress());
 	}
+	public static void viewmenu() throws Exception
+	{
+		App.viewMenu();
+	}
 	public static boolean authchange(Food food) throws IOException
 	{
 		String str;
@@ -88,7 +96,53 @@ private static Session session;
 			return true;
 		else return false;
 	}
-	public static void main(String[] args) throws IOException {
+	public static void listener(Object command)
+	{
+		
+	}
+	private static void  fetch() throws Exception
+	{
+		System.out.println("Fetching Data, Please Wait.");
+		try{
+			SessionFactory sessionFactory= getSessionFactory();
+			session = sessionFactory.openSession();
+			session.beginTransaction();
+			
+			App.generateIngredient();
+			App.generateMeals();
+			App.generateDrinks();
+			App.generateDesserts();
+		}
+		catch(Exception exception)
+		{
+			if(session != null)
+			{
+				session.getTransaction().rollback();
+			}
+			System.err.println("An error occured, changes have been rolled back.");
+			exception.printStackTrace();
+		}
+		finally{session.close();
+		}
+	}
+	/*public static void loop() throws IOException {
+			loopThread = new Thread(new Runnable() {
+
+				public void run() {
+					try {
+						fetch();
+						System.out.println("Data Fetched!");
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+				}
+			});
+			loopThread.start();
+			isRunning = true;
+	}*/
+	public static void main(String[] args) throws Exception {
 	/*	if (args.length != 1) {
 			System.out.println("Required argument: <port>");
 		} else {
@@ -98,11 +152,44 @@ private static Session session;
 		}*/
 		Server server = new Server(3002);
 		
+		loopThread = new Thread(new Runnable() {
+
+			public void run() {
+				try {
+					
+					System.out.println("Fetching Data, Please Wait.");
+					try{
+						SessionFactory sessionFactory= getSessionFactory();
+						session = sessionFactory.openSession();
+						session.beginTransaction();
+						
+						App.generateIngredient();
+						App.generateMeals();
+						App.generateDrinks();
+						App.generateDesserts();
+						
+						server.listen();
+					}
+					catch(Exception exception)
+					{
+						if(session != null)
+						{
+							session.getTransaction().rollback();
+						}
+						System.err.println("An error occured, changes have been rolled back.");
+						exception.printStackTrace();
+					}
+				}
+					finally{session.close();
+					}
+					
+					System.out.println("Data Fetched!");
+					
+				
+			}
+		});
+		loopThread.start();
+		isRunning = true;
 		
-		System.out.println("Server On!");
-		
-		
-		server.listen();
-		
-	}
+	}	
 }

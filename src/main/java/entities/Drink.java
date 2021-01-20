@@ -8,6 +8,7 @@ import javax.persistence.Table;
 
 import clientServer.ChatClientCLI;
 import clientServer.Server;
+import server.ocsf.server.AbstractServer;
 
 @Entity
 public class Drink extends Food{
@@ -51,7 +52,7 @@ public class Drink extends Food{
 	public boolean update() throws Exception
 	{
 		super.update();
-		session = ChatClientCLI.getSession();
+		session = Server.getSession();
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		Drink drink ;
 		drink = (Drink)session.get(Food.class, this.id);

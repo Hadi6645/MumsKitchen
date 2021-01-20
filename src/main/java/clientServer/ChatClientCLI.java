@@ -24,17 +24,16 @@ public class ChatClientCLI {
 	
 	private static Session session;
 	
-	public static Session getSession()
+	/*public static Session getSession()
 	{
+		//session = Server.getSession();
 		return session;
 	}
-	private static SessionFactory getSessionFactory() throws HibernateException
+	/*private static SessionFactory getSessionFactory() throws HibernateException
 	{
 		Configuration configuration= new Configuration();
 		// Add ALL of your entities here. You can also try adding a whole package.
-		/*configuration.addAnnotatedClass(Game.class);
-		configuration.addAnnotatedClass(Costumer.class);
-		configuration.addAnnotatedClass(CostumerGame.class);*/
+		
 		configuration.addAnnotatedClass(Meal.class);
 		configuration.addAnnotatedClass(BaseMenu.class);
 		configuration.addAnnotatedClass(Dessert.class);
@@ -46,7 +45,7 @@ public class ChatClientCLI {
 		ServiceRegistry serviceRegistry= new StandardServiceRegistryBuilder()
 				.applySettings(configuration.getProperties()).build();
 		return configuration.buildSessionFactory(serviceRegistry);
-	}
+	}*/
 	
 	private Client client;
 	private boolean isRunning;
@@ -63,14 +62,14 @@ public class ChatClientCLI {
 
 			public void run() {
 				
-				try{SessionFactory sessionFactory= getSessionFactory();
-				session = sessionFactory.openSession();
-				session.beginTransaction();
+				//SessionFactory sessionFactory= Server.getSessionFactory();
+				//session = Server.getSession();
+				//session.beginTransaction();
 				
-				App.generateIngredient();
-				App.generateMeals();
-				App.generateDrinks();
-				App.generateDesserts();
+				//App.generateIngredient();
+				//App.generateMeals();
+				//App.generateDrinks();
+				//App.generateDesserts();
 				
 				BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 				String message, foodid,changeid;
@@ -84,7 +83,7 @@ public class ChatClientCLI {
 						
 						if (message.equalsIgnoreCase("menu")) {
 							//String[] empty = null;
-							App.viewMenu();
+							Server.viewmenu();
 							System.out.println("\nMenu generated successfully.");
 						}
 						
@@ -121,7 +120,7 @@ public class ChatClientCLI {
 
 				}
 				}
-				catch(Exception exception)
+				/*catch(Exception exception)
 				{
 					if(session != null)
 					{
@@ -131,8 +130,8 @@ public class ChatClientCLI {
 					exception.printStackTrace();
 					}
 				finally{session.close();
-				}
-			}
+				}*/
+			
 		});
 
 		loopThread.start();
@@ -161,7 +160,7 @@ public class ChatClientCLI {
 		boolean isSend = messageToSend.startsWith("#send") && !isSendSubmitters;
 		boolean isExit = messageToSend.startsWith("#exit");
 		if(isSendSubmitters) {
-			messageToSend = "Anis, Hadi"; 
+			messageToSend = "Anis, Hadi, Hind, Lydia"; 
 		}
 		if(isSend) {
 			messageToSend = messageToSend.replaceFirst("#send ",""); 

@@ -55,6 +55,5 @@ public class Client extends AbstractClient {
 
 		Client chatClient = new Client(host, 3002);
 		chatClient.openConnection();
-		System.out.println("Fetching Data, Please Wait.");
 	}
 }
