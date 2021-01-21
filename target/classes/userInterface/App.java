@@ -28,7 +28,17 @@ import javafx.stage.Stage;
  */
 public class App extends Application{	
 	
-	 public static  Company start_company() {
+	private static String host;
+	private static int port;
+	 public static String getHost() {
+		return host;
+	}
+
+	public static int getPort() {
+		return port;
+	}
+
+	public static  Company start_company() {
 
 		 // System.out.println("hiiiiiiiiiiiiiiiiiiiiii");
 		 
@@ -103,11 +113,18 @@ public class App extends Application{
         return fxmlLoader.load();
     }
     
-   
-    
-
     public static void main(String[] args) {
-        launch();
+    	if (args.length != 2) {
+			System.out.println("Required arguments: <host> <port>");
+		} else {
+			host = args[0];
+			port = Integer.parseInt(args[1]);
+			System.out.println(host);
+			System.out.println(port); 
+			launch();
+		}
+    	
+       
     }
 
 }

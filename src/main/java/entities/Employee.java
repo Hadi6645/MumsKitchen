@@ -1,7 +1,8 @@
 package entities;
 
 import javax.persistence.Entity;
-
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,17 +16,20 @@ import enums.EmployeeRole;
 public class Employee {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int employeeNum;
 	private String id;
 	private String password;
 	private String firstName;
 	private String lastName;
+	@Enumerated(EnumType.STRING)
 	private EmployeeRole role;
 
-	public Employee() {
-		// TODO Auto-generated constructor stub
-	}
-	public Employee(String id, String password, String firstName, String lastName, EmployeeRole role) {
+	public Employee()
+	{
 		super();
+	}
+	
+	public Employee(String id, String password, String firstName, String lastName, EmployeeRole role) {
 		this.id = id;
 		this.password = password;
 		this.firstName = firstName;

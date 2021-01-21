@@ -27,7 +27,7 @@ import entities.Meal;
 import entities.Menu;
 import entities.RestaurantMenu;
 import enums.EmployeeRole;
-
+import enums.Temperature;
 
 public class App
 {
@@ -50,6 +50,7 @@ public class App
 		Ingredients flour = new Ingredients("flour");
 		Ingredients strawberry = new Ingredients("strawberry");
 		Ingredients chocolate = new Ingredients("chocolate");
+		Ingredients honey = new Ingredients("honey");
 		session.save(salt); //0
 		session.save(pepper); //1
 		session.save(meat); //2
@@ -64,6 +65,7 @@ public class App
 		session.save(flour); //11
 		session.save(strawberry); //12
 		session.save(chocolate); //13
+		session.save(honey); //14
 		session.flush();
 	}
 	private static List<Ingredients> getAllIngredients() throws Exception
@@ -127,9 +129,9 @@ public class App
 	public static void generateDrinks() throws Exception
 	{
 		session = Server.getSession();
-		Drink cocacola = new Drink("CocaCola","330ml Sparkling Cola drink in a can",8.50,true,0);
-		Drink appleJuice = new Drink("Apple Juice","Pregat apple juice 500ml in a bottle",8,false,0);
-		Drink carlsberg = new Drink("Carlsberg beer","330ml glass carlsberg beer bottle",25,false,5);
+		Drink cocacola = new Drink("CocaCola","330ml Sparkling Cola drink in a can",8.50,true,0,Temperature.COLD);
+		Drink appleJuice = new Drink("Apple Juice","Pregat apple juice 500ml in a bottle",8,false,0,Temperature.COLD);
+		Drink carlsberg = new Drink("Carlsberg beer","330ml glass carlsberg beer bottle",25,false,5,Temperature.COLD);
 		
 		session.save(cocacola); //0
 		session.save(appleJuice); //1
@@ -314,6 +316,6 @@ public class App
 		session.save(ceo); //0
 		session.save(dietition); //1
 		session.save(manager); //2
-		session.flush();
+		//session.flush();
 	}
 }

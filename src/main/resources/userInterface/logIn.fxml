@@ -16,7 +16,7 @@
             <Font size="22.0" />
          </font>
       </Label>
-      <Button fx:id="logInBtn" layoutX="226.0" layoutY="250.0" mnemonicParsing="false" onAction="#show_logIn_panel" text="Log in" />
+      <Button fx:id="logInBtn" layoutX="226.0" layoutY="250.0" mnemonicParsing="false" onAction="#attempt_logIn" text="Log in" />
       <Label layoutX="120.0" layoutY="171.0" text="Id:" />
       <Label layoutX="120.0" layoutY="216.0" text="Password:" />
       <TextField fx:id="id_textField" layoutX="176.0" layoutY="167.0" />

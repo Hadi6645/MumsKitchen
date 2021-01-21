@@ -4,23 +4,32 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.service.ServiceRegistry;
 
 import control.ServerInstruction;
 import control.ServerInstructionType;
+import entities.BaseMenu;
+import entities.Dessert;
+import entities.Drink;
 import entities.Employee;
 import entities.Food;
+import entities.Ingredients;
+import entities.Meal;
+import enums.EmployeeRole;
 import server.ocsf.server.AbstractServer;
 import server.ocsf.server.ConnectionToClient;
 
 public class Server extends AbstractServer {
 	
 	private static Session session;
+	private static SessionFactory sessionFactory;
 	public static Session getSession()
 	{
 		return session;
@@ -28,8 +37,17 @@ public class Server extends AbstractServer {
 	private SessionFactory getSessionFactory() throws HibernateException
 	{
 		Configuration configuration= new Configuration();
-		configuration.addPackage("entities");
-		configuration.addPackage("control");
+		//configuration.addPackage("entities");
+		//configuration.addPackage("control");
+		configuration.addAnnotatedClass(Meal.class);
+		configuration.addAnnotatedClass(BaseMenu.class);
+		configuration.addAnnotatedClass(Dessert.class);
+		configuration.addAnnotatedClass(Food.class);
+		configuration.addAnnotatedClass(Ingredients.class);
+		configuration.addAnnotatedClass(Meal.class);
+		configuration.addAnnotatedClass(Drink.class);
+		configuration.addAnnotatedClass(Employee.class);
+		configuration.addAnnotatedClass(EmployeeRole.class);
 		ServiceRegistry serviceRegistry= new StandardServiceRegistryBuilder()
 				.applySettings(configuration.getProperties()).build();
 		return configuration.buildSessionFactory(serviceRegistry);
@@ -37,7 +55,7 @@ public class Server extends AbstractServer {
 	
 	private void initializeDatabase() {
 		try{
-		    SessionFactory sessionFactory= this.getSessionFactory();
+		    sessionFactory= this.getSessionFactory();
 			session = sessionFactory.openSession();
 			session.beginTransaction();
 			
@@ -62,7 +80,7 @@ public class Server extends AbstractServer {
 	private boolean addToDatabase(Object data) {
 		try {
 			session.save(data);
-			session.flush();
+			//session.flush();
 			return true;
 			//finally block is executed always even if you put a return statement in the try block. 
 			//The finally block will be executed before the return statement.
@@ -87,13 +105,13 @@ public class Server extends AbstractServer {
 			return false;
 		}
 		// check in database
-		session = getSession();
-		Employee emp =  (Employee)session.get(Employee.class, info[0]);
-		if(emp == null || emp.getPassword() != info[1]) { // if not found or wrong password
-			session.close();
+		Criteria criteria = session.createCriteria(Employee.class);
+		Employee emp = (Employee) criteria.add(Restrictions.eq("id", info[0])).uniqueResult();
+
+		//Employee emp =  (Employee)session.get(Employee.class, info[0]);
+		if(emp == null || !emp.getPassword().equals(info[1])) { // if not found or wrong password
 			return false;
 		}
-		session.close();
 		return true;
 	}
 	
@@ -106,31 +124,41 @@ public class Server extends AbstractServer {
 		// we need a switch
 		ServerInstruction sInstruction = (ServerInstruction)(msg);
 		if (sInstruction == null) {
-			System.err.println("cannot handle message from client, sInstruction is null.");
+			System.err.println("cannot handle message from client, sInstruction is null.\n");
+			sendResponseToClient(null, client);
 			return;
 		}
+		
 		ServerInstructionType instruction = sInstruction.getInstruction();
 		Object data = sInstruction.getData();
 		Object response = null;
+		if ( instruction == null) {
+			System.err.println("cannot handle message from client, instruction is null.\n");
+			sendResponseToClient(null, client);
+			return;
+		}
+		session = sessionFactory.openSession();
+		session.beginTransaction();
 		switch(instruction) {
 		case CHECK_EMPLOYEE_EXISTS: response = this.checkEmployeeExists(data);
 			break;
 		default:
 			break;
 		}
-		if (response == null) {
-			return; // no need to send anything back to the client
-		}
+		session.close();
+		sendResponseToClient(response, client);
+	}
+	
+	private void sendResponseToClient(Object response,ConnectionToClient client)
+	{
 		try {
 			client.sendToClient(response);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			System.err.println("cannot send respone to client.");
+			System.err.println("cannot send respone to client.\n");
 			e.printStackTrace();
 		}
 	}
-	
-	
 	
 	@Override
 	protected synchronized void clientDisconnected(ConnectionToClient client) {
@@ -158,10 +186,17 @@ public class Server extends AbstractServer {
 		else return false;
 	}
 	public static void main(String[] args) throws IOException {
-		Server server = new Server(3000); //change this port to something else if you want, but remember to update the client's constructor
-		System.out.println("Server On!");
-		server.initializeDatabase();
-		server.listen();
+		//Server server = new Server(3000); //change this port to something else if you want, but remember to update the client's constructor
+		
+		if (args.length != 1) {
+			System.out.println("Required argument: <port>");
+		} else {
+			Server server = new Server(Integer.parseInt(args[0]));
+			server.initializeDatabase();
+			System.out.println("Data Fetched, Server On!");
+			server.listen();
+		}
+
 		
 	}
 	

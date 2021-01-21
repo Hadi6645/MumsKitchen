@@ -91,7 +91,7 @@ public class PrimaryController {
      
      @FXML
      void goTologIn(ActionEvent event)  throws IOException{
-    	 App.setRoot("LogInController");
+    	 App.setRoot("logIn");
      }
 
 

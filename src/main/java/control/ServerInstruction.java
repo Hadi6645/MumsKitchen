@@ -1,7 +1,8 @@
 package control;
 
-public class ServerInstruction {
+public class ServerInstruction implements java.io.Serializable {
 	
+	private static final long serialVersionUID = 1L;
 	private ServerInstructionType instruction;
 	private Object data;
 
