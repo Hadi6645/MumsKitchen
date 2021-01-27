@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import control.Authenticator;
+import control.Cache;
 import entities.Company;
 import entities.Restaurant;
 import javafx.collections.FXCollections;
@@ -33,6 +34,7 @@ public class PrimaryController {
     @FXML
     public void initialize() {
     // String val = null;
+    	Cache cache = Cache.getCache();
      	Company company = new Company();
          company = App.start_company();
         //listView_2 = (ListView<Restaurant>) company.getRestaurants();
@@ -75,6 +77,8 @@ public class PrimaryController {
         for(int i=0; i<res.size();i++) {
     		if(res.get(i).getName() == val) {
     			My_res = res.get(i);
+    			cache.setRestId(My_res.getId());
+    			cache.setRestaurant(My_res);
     		}
     	}
         

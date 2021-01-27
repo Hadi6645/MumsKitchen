@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import control.Cache;
 import entities.Dessert;
 import entities.Drink;
 import entities.Meal;
@@ -36,9 +37,10 @@ public class Show_Menu {
     @FXML
     public void initialize() {
     // String val = null;
-    	Restaurant restaurant = new Restaurant();
-    	restaurant = PrimaryController.get_Restaurant();
-    	
+    	Cache cache= Cache.getCache();
+    	Restaurant restaurant ;
+    	//restaurant = PrimaryController.get_Restaurant();
+    	restaurant = cache.getRestaurant();
     	 List<Meal> Meals = new ArrayList<Meal>();
     	// System.out.println("hiiiiiiiiiiiiiiiiiiiiii");
     	 Meals = restaurant.getMenu().get_meals();

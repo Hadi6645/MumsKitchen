@@ -27,5 +27,5 @@ public class ServerInstruction implements java.io.Serializable {
 	public void setData(Object data) {
 		this.data = data;
 	}
-
+	
 }

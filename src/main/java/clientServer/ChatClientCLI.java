@@ -7,14 +7,14 @@ import control.ServerInstruction;
 
 
 public class ChatClientCLI {
-	
 	private Client client;
 	private Thread requestThread;
 	
 	public ChatClientCLI(Client client) {
 		this.client = client;
 	}
-	
+	public ChatClientCLI() {
+	}
 	
 	public void sendInstructionToServer(ServerInstruction sInstruction, CompletableFuture<Object> completableFuture) throws IOException {
 		if (sInstruction == null) {
@@ -22,6 +22,9 @@ public class ChatClientCLI {
 			completableFuture.cancel(true); //send CancelException to waiting client
 			return;
 		}
+		Client client = new Client();
+		this.client = client;
+		client.setCompletableFuture(completableFuture);
 		requestThread = new Thread(new Runnable() {
 
 			public void run() {

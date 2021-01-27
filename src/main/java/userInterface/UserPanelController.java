@@ -11,7 +11,7 @@ public class UserPanelController {
 	@FXML
     void logOut(ActionEvent event)  throws IOException{
     	Authenticator auth = Authenticator.getAuthenticator();
-    	auth.logOut("1"); //change this to user id
+    	auth.logOut(); //change this to user id
     	
     	App.setRoot("Main_Page");
     }

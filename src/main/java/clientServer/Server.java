@@ -93,9 +93,7 @@ public class Server extends AbstractServer {
 			exception.printStackTrace();
 			// The finally block will be executed before the return statement.
 			return false;
-		} finally{
-			session.close();
-		}
+		} 
 	}
 	
 	private boolean checkEmployeeExists(Object data) {
