@@ -36,6 +36,11 @@ public class Employee {
 		this.lastName = lastName;
 		this.role = role;
 	}
+	
+	public Employee(String id)
+	{
+		super();
+	}
 	public String getId() {
 		return id;
 	}

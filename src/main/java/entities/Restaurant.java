@@ -1,9 +1,12 @@
 package entities;
 
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.util.List;
 
@@ -16,11 +19,18 @@ public class Restaurant {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	private String Name;
+	@OneToOne
 	private Address Address ;
 	private String Telephone;
+	@Column
+    @ElementCollection(targetClass=Employee.class)
 	private List<Employee> Staff;
+	@OneToOne
 	private OpeningHours Hours;
+	@Column
+    @ElementCollection(targetClass=DiningSpace.class)
 	private List<DiningSpace> Spaces;
+	@OneToOne
 	private RestaurantMenu Menu;
 	
 	

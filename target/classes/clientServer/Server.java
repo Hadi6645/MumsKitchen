@@ -13,15 +13,9 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.service.ServiceRegistry;
 
+import entities.*;
 import control.ServerInstruction;
 import control.ServerInstructionType;
-import entities.BaseMenu;
-import entities.Dessert;
-import entities.Drink;
-import entities.Employee;
-import entities.Food;
-import entities.Ingredients;
-import entities.Meal;
 import enums.EmployeeRole;
 import server.ocsf.server.AbstractServer;
 import server.ocsf.server.ConnectionToClient;
@@ -48,6 +42,13 @@ public class Server extends AbstractServer {
 		configuration.addAnnotatedClass(Drink.class);
 		configuration.addAnnotatedClass(Employee.class);
 		configuration.addAnnotatedClass(EmployeeRole.class);
+		configuration.addAnnotatedClass(Company.class);
+		configuration.addAnnotatedClass(Restaurant.class);
+		configuration.addAnnotatedClass(Address.class);
+		configuration.addAnnotatedClass(OpeningHours.class);
+		configuration.addAnnotatedClass(DiningSpace.class);
+		configuration.addAnnotatedClass(RestaurantMenu.class);
+		configuration.addAnnotatedClass(table.class);
 		ServiceRegistry serviceRegistry= new StandardServiceRegistryBuilder()
 				.applySettings(configuration.getProperties()).build();
 		return configuration.buildSessionFactory(serviceRegistry);
@@ -64,6 +65,9 @@ public class Server extends AbstractServer {
 			App.generateDrinks();
 			App.generateDesserts();
 			App.generateEmployees();
+			App.generateCompany(); //important to keep in that order.
+			App.generateRestaurants();
+			
 
 		} catch(Exception exception) {
 			if(session != null)

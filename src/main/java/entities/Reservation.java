@@ -16,7 +16,7 @@ public class Reservation {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	private Client Client;
+	private Costumer Costumer;
 	private int GuestsNumber;
 	private Restaurant Restaurant;
 	private DiningSpace Space;
@@ -25,10 +25,10 @@ public class Reservation {
 	private Status Status;
 	private String LinkToHealthReport;
 	
-	public Reservation(int id, Client Client, int GuestsNumber,DiningSpace Space, LocalDateTime Time, CreditCard CreditCard, Status Status, String LinkToHealthReport, Restaurant Restaurant)
+	public Reservation(int id, Costumer Costumer, int GuestsNumber,DiningSpace Space, LocalDateTime Time, CreditCard CreditCard, Status Status, String LinkToHealthReport, Restaurant Restaurant)
 	{
 		 this.id  = id;
-		this.Client = Client;
+		this.Costumer = Costumer;
 		this.GuestsNumber = GuestsNumber;
 		this.Restaurant = Restaurant;
 		this.Space = Space;
@@ -38,9 +38,9 @@ public class Reservation {
 		this.LinkToHealthReport  = LinkToHealthReport;
 	}
 	
-	public Reservation(Client Client, int GuestsNumber,DiningSpace Space, LocalDateTime Time, CreditCard CreditCard, String LinkToHealthReport, Restaurant Restaurant)
+	public Reservation(Costumer Costumer, int GuestsNumber,DiningSpace Space, LocalDateTime Time, CreditCard CreditCard, String LinkToHealthReport, Restaurant Restaurant)
 	{
-		this.Client = Client;
+		this.Costumer = Costumer;
 		this.GuestsNumber = GuestsNumber;
 		this.Restaurant = Restaurant;
 		this.Space = Space;
@@ -53,9 +53,9 @@ public class Reservation {
 	{
 		return id;
 	}
-	public Client getClient()
+	public Costumer getClient()
 	{
-		return Client;
+		return Costumer;
 	}
 	 public int getGuestsNumber()
 	 {
