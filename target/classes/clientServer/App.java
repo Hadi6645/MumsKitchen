@@ -6,25 +6,33 @@ package clientServer;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.sql.Statement;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.service.ServiceRegistry;
 
+import entities.Address;
 import entities.BaseMenu;
+import entities.Company;
 import entities.Dessert;
+import entities.DiningSpace;
 import entities.Drink;
 import entities.Employee;
 import entities.Food;
 import entities.Ingredients;
 import entities.Meal;
 import entities.Menu;
+import entities.OpeningHours;
+import entities.Restaurant;
 import entities.RestaurantMenu;
 import enums.EmployeeRole;
 import enums.Temperature;
@@ -211,6 +219,7 @@ public class App
 		
 		BaseMenu common = new BaseMenu(baseMeals,baseDrinks,baseDesserts);
 		
+		session.save(common);
 		return common;
 	}
 	
@@ -231,7 +240,7 @@ public class App
 		
 		Menu menu = new Menu(resMeals,resDrinks,resDesserts);
 		BaseMenu common = generateBaseMenu();
-		
+		session.save(menu);
 		RestaurantMenu resMenu = new RestaurantMenu(common,menu);
 		
 		
@@ -310,12 +319,149 @@ public class App
 	public static void generateEmployees() throws Exception
 	{
 		session = Server.getSession();
-		Employee ceo = new Employee("123456789","1234","Lia","Komo",EmployeeRole.CEO);
-		Employee dietition = new Employee("987654321","1234","Mat","Blob",EmployeeRole.DIETITION);
+		String CEO_id = "123456789";
+    	String CEO_password = "smellycat";
+    	String CEO_firstName = "Phoebe";
+    	String CEO_lastName = "Buffay";
+    	EmployeeRole CEO_role = EmployeeRole.CEO;
+    	Employee CEOO = new Employee(CEO_id, CEO_password, CEO_firstName, CEO_lastName, CEO_role);
+    	
+    	String Dietitian_id = "987654321";
+    	String Dietitian_password = "iknow";
+    	String Dietitian_firstName = "Monica";
+    	String Dietitian_lastName = "Geller";
+    	EmployeeRole Dietitian_role = EmployeeRole.DIETITION;
+    	Employee Dietitian = new Employee(Dietitian_id, Dietitian_password, Dietitian_firstName, Dietitian_lastName, Dietitian_role);
+		
+		
+		Employee ceo = new Employee("12345678","1234","Lia","Komo",EmployeeRole.CEO);
+		Employee dietition = new Employee("98765432","1234","Mat","Blob",EmployeeRole.DIETITION);
 		Employee manager = new Employee("012345678","1234","Karmen","Jungle",EmployeeRole.MANAGER);
-		session.save(ceo); //0
-		session.save(dietition); //1
+		//session.save(ceo); //0
+		//session.save(dietition); //1
+		
+		session.save(CEOO); //0
+		session.save(Dietitian); //1
 		session.save(manager); //2
 		//session.flush();
+	}
+	
+	private static List<Employee> getEmployees() throws Exception
+	{
+		session = Server.getSession();
+		CriteriaBuilder builder= session.getCriteriaBuilder();
+		CriteriaQuery<Employee> query= builder.createQuery(Employee.class);
+		query.from(Employee.class);
+		List<Employee> data= session.createQuery(query).getResultList();
+		return data;
+	}
+	
+	public static Employee getEmployeeByID(String employeeID) throws Exception
+	{
+		Employee wantedEmployee = null;
+		List<Employee> allEmployees = getEmployees();
+		
+		for(Employee employee : allEmployees)
+		{
+			if(employee.getId().equals(employeeID))
+			{
+				wantedEmployee = employee;
+				break;
+			}
+		}
+		return wantedEmployee;
+	}
+	
+	private static Employee getCEO() throws Exception
+	{
+		Employee wantedEmployee = null;
+		List<Employee> allEmployees = getEmployees();
+		
+		for(Employee employee : allEmployees)
+		{
+			if(employee.getRole() == EmployeeRole.CEO)
+			{
+				wantedEmployee = employee;
+				break;
+			}
+		}
+		return wantedEmployee;
+	}
+	
+	private static Employee getDietition() throws Exception
+	{
+		Employee wantedEmployee = null;
+		List<Employee> allEmployees = getEmployees();
+		
+		for(Employee employee : allEmployees)
+		{
+			if(employee.getRole() == EmployeeRole.DIETITION)
+			{
+				wantedEmployee = employee;
+				break;
+			}
+		}
+		return wantedEmployee;
+	}
+	
+	public static void generateCompany() throws Exception
+	{
+		Employee ceo = getCEO();
+		Employee dietition = getDietition();
+		
+		Company Company = new Company(ceo, dietition);
+		
+		session.save(Company);
+	}
+	
+	private static Company getCompany() throws Exception
+	{
+		session = Server.getSession();
+		CriteriaBuilder builder= session.getCriteriaBuilder();
+		CriteriaQuery<Company> query= builder.createQuery(Company.class);
+		query.from(Company.class);
+		Company data= session.createQuery(query).uniqueResult();
+		return data;
+	}
+	
+	public static void generateRestaurants() throws Exception
+	{
+		String Name = "Haifa Branch";
+    	Address Address = new Address("Haifa", "Yefe Nof", 42 );
+    	String Telephone = "036427130";
+    	List<Employee> Staff = new ArrayList<>(); 
+    	OpeningHours Hours = new OpeningHours();
+    	//Hours.setOpeningHours(int day, LocalTime open, LocalTime close);
+    	List<DiningSpace> Spaces = new ArrayList<>();
+    	
+    	RestaurantMenu resMenu = generateResturantMenu();
+    	session.save(Address);
+    	session.save(Hours);
+    	session.save(resMenu);
+    	Restaurant res1 = new Restaurant(Name,Address,Telephone,Staff,Hours,Spaces,resMenu);
+    	
+    	
+    	String Name2 = "Tel Aviv Branch";
+    	Address Address2 = new Address("Tel Aviv", "Exhibition Gardens", 11 );
+    	String Telephone2 = "036427080";
+    	List<Employee> Staff2 = new ArrayList<>(); 
+    	OpeningHours Hours2 = new OpeningHours();
+    	//Hours.setOpeningHours(int day, LocalTime open, LocalTime close);
+    	List<DiningSpace> Spaces2 = new ArrayList<>();
+    	session.save(Address2);
+    	session.save(Hours2);
+    	//RestaurantMenu resMenu2 = generateResturantMenu();
+    	
+    	Restaurant res2 = new Restaurant(Name2,Address2,Telephone2,Staff2,Hours2,Spaces2,resMenu);
+    	
+    	session.save(res1);
+    	session.save(res2);
+    	
+    	Company mainCompany = getCompany();
+    	
+    	mainCompany.AddRestaurant(res1);
+    	mainCompany.AddRestaurant(res2);
+    	
+    	session.save(mainCompany);
 	}
 }

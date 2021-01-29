@@ -36,7 +36,7 @@ public class PrimaryController {
     // String val = null;
     	Cache cache = Cache.getCache();
      	Company company = new Company();
-         company = App.start_company();
+         //company = App.start_company();
         //listView_2 = (ListView<Restaurant>) company.getRestaurants();
          List<Restaurant> res = new ArrayList<Restaurant>();
         res = company.getRestaurants();

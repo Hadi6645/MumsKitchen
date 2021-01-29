@@ -2,7 +2,7 @@ package entities;
 
 import java.util.List;
 
-public class Client {
+public class Costumer {
 	String FirstName;
 	String LastName;
 	String Phone;
@@ -11,7 +11,7 @@ public class Client {
 	private List<CreditCard> CreditCard;
 	int id;
 	
-	public Client(String FirstName,String LastName, String Phone,
+	public Costumer(String FirstName,String LastName, String Phone,
 	String Email,
 	Address Address,
 	List<CreditCard> CreditCard)
@@ -24,7 +24,7 @@ public class Client {
 	this.CreditCard = CreditCard;
 	}
 	
-	public Client(String FirstName,String LastName, String Phone,
+	public Costumer(String FirstName,String LastName, String Phone,
 			String Email,
 			Address Address)
 			{

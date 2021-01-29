@@ -38,7 +38,7 @@ public class App extends Application{
 		return port;
 	}
 
-	public static  Company start_company() {
+	/*public static  Company start_company() {
 
 		 // System.out.println("hiiiiiiiiiiiiiiiiiiiiii");
 		 
@@ -93,7 +93,7 @@ public class App extends Application{
 	    	Company.AddRestaurant(res2);
 	    	
 	    	return Company;
-	    }
+	    }*/
 	 
 	 private static Scene scene;    
 	    @Override
