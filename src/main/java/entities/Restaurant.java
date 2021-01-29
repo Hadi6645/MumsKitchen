@@ -8,13 +8,19 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import java.io.Serializable;
 import java.util.List;
 
 
 
 @Entity
 @Table(name = "restaurant")
-public class Restaurant {
+public class Restaurant implements java.io.Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;

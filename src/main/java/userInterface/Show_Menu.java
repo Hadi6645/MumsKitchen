@@ -40,9 +40,11 @@ public class Show_Menu {
     	Cache cache= Cache.getCache();
     	Restaurant restaurant ;
     	//restaurant = PrimaryController.get_Restaurant();
-    	restaurant = cache.getRestaurant();
+    	//restaurant = cache.getRestaurant();
+    	 List<Restaurant> rests = cache.getCachedRestaurants();
     	 List<Meal> Meals = new ArrayList<Meal>();
     	// System.out.println("hiiiiiiiiiiiiiiiiiiiiii");
+    	 restaurant = rests.get(1);
     	 Meals = restaurant.getMenu().get_meals();
     
     	 List<Drink> Drinks = new ArrayList<Drink>();

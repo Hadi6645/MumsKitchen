@@ -12,7 +12,12 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "menu")
-public class Menu {
+public class Menu implements java.io.Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	int id;
@@ -22,7 +27,7 @@ public class Menu {
 	List<Meal> meals;
 	
 	@Column
-    @ElementCollection(targetClass=Meal.class)
+    @ElementCollection(targetClass=Drink.class)
 	List<Drink> drinks;
 	@Column
     @ElementCollection(targetClass=Dessert.class)
@@ -32,6 +37,10 @@ public Menu(List<Meal> meals,List<Drink> drinks,List<Dessert> desserts) {
 	this.meals = meals;
 	this.drinks = drinks;
 	this.desserts = desserts;
+}
+
+public Menu() {
+	// TODO Auto-generated constructor stub
 }
 
 public List<Meal> getmeals()

@@ -18,6 +18,11 @@ public class Drink extends Food{
 	double alcPercent;
 	@Enumerated(EnumType.STRING)
 	Temperature mytemp;
+	
+	public Drink() {
+		super();
+	}
+	 
 	public Drink(String name,String description,double price,boolean isSparkling,double alcPercent,Temperature temp) {
 		super(name,description,price);
 		this.isSparkling = isSparkling;

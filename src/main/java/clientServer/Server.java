@@ -3,6 +3,8 @@ package clientServer;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
@@ -24,6 +26,11 @@ public class Server extends AbstractServer {
 	
 	private static Session session;
 	private static SessionFactory sessionFactory;
+	
+	public Server(int port) {
+		super(port);
+	}
+	
 	public static Session getSession()
 	{
 		return session;
@@ -64,6 +71,8 @@ public class Server extends AbstractServer {
 			App.generateMeals();
 			App.generateDrinks();
 			App.generateDesserts();
+			App.generateBaseMenu();
+			App.generateResturantMenu();
 			App.generateEmployees();
 			App.generateCompany(); //important to keep in that order.
 			App.generateRestaurants();
@@ -117,9 +126,13 @@ public class Server extends AbstractServer {
 		return true;
 	}
 	
-	public Server(int port) {
-		super(port);
-	}
+	/*private List<Restaurant> getRestaurauntsFromDB()
+	{
+		List<Restaurant> restaurants = null;
+		restaurants.addAll(App.getAllRestaurants());
+		
+		return restaurants;
+	}*/
 
 	@Override
 	protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
@@ -144,6 +157,7 @@ public class Server extends AbstractServer {
 		switch(instruction) {
 		case CHECK_EMPLOYEE_EXISTS: response = this.checkEmployeeExists(data);
 			break;
+		case GET_RESTAURANTS_LIST: response = App.getAllRestaurants();
 		default:
 			break;
 		}

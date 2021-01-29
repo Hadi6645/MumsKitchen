@@ -25,6 +25,10 @@ public class Reservation {
 	private Status Status;
 	private String LinkToHealthReport;
 	
+	public Reservation() {
+		super();
+	}
+	
 	public Reservation(int id, Costumer Costumer, int GuestsNumber,DiningSpace Space, LocalDateTime Time, CreditCard CreditCard, Status Status, String LinkToHealthReport, Restaurant Restaurant)
 	{
 		 this.id  = id;

@@ -19,6 +19,10 @@ public class Ingredients {
 	int id;
 	String name;
 	
+	public Ingredients() {
+		super();
+	}
+	
 	public Ingredients(String name)
 	{
 		super();

@@ -5,6 +5,9 @@ import java.util.List;
 
 public class DeniedClientReprt extends Report {
 
+	public DeniedClientReprt() {
+		super();
+	}
 	public DeniedClientReprt(int id, int RestaurantId, LocalDateTime Time, List<NumberByDate> Numbers) {
 		super(id, RestaurantId, Time, Numbers);
 		// TODO Auto-generated constructor stub

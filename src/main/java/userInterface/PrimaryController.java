@@ -35,11 +35,12 @@ public class PrimaryController {
     public void initialize() {
     // String val = null;
     	Cache cache = Cache.getCache();
-     	Company company = new Company();
+     	//Company company = new Company();
          //company = App.start_company();
         //listView_2 = (ListView<Restaurant>) company.getRestaurants();
-         List<Restaurant> res = new ArrayList<Restaurant>();
-        res = company.getRestaurants();
+         List<Restaurant> res =  (List<Restaurant>) cache.requestRestaurants();
+         cache.setCachedRestaurants(res);
+        //res = company.getRestaurants();
         for(int i=0; i<res.size();i++) {
      	   listViewData1.add(res.get(i).getName());
         }

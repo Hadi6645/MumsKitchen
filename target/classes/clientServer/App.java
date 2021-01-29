@@ -201,7 +201,7 @@ public class App
 		return data;
 	}
 	
-	private static BaseMenu generateBaseMenu() throws Exception
+	static void generateBaseMenu() throws Exception
 	{
 		List<Meal> meals = getAllMeals();
 		List<Drink> drinks = getAllDrinks();
@@ -217,13 +217,22 @@ public class App
 		List<Dessert> baseDesserts = new ArrayList<Dessert>();
 		baseDesserts.add(desserts.get(1));
 		
-		BaseMenu common = new BaseMenu(baseMeals,baseDrinks,baseDesserts);
+		BaseMenu common = new BaseMenu(getAllMeals(),getAllDrinks(),getAllDesserts());
 		
 		session.save(common);
-		return common;
 	}
 	
-	private static RestaurantMenu generateResturantMenu() throws Exception
+	private static BaseMenu getBaseMenu() throws Exception
+	{
+		session = Server.getSession();
+		CriteriaBuilder builder= session.getCriteriaBuilder();
+		CriteriaQuery<BaseMenu> query= builder.createQuery(BaseMenu.class);
+		query.from(BaseMenu.class);
+		BaseMenu data= session.createQuery(query).uniqueResult();
+		return data;
+	}
+	
+	static void generateResturantMenu() throws Exception
 	{
 		List<Meal> meals = getAllMeals();
 		List<Drink> drinks = getAllDrinks();
@@ -238,13 +247,20 @@ public class App
 		List<Dessert> resDesserts = new ArrayList<Dessert>();
 		resDesserts.add(desserts.get(0));
 		
-		Menu menu = new Menu(resMeals,resDrinks,resDesserts);
-		BaseMenu common = generateBaseMenu();
+		Menu menu = new Menu(getAllMeals(),getAllDrinks(),getAllDesserts());
+		BaseMenu common = getBaseMenu();
 		session.save(menu);
 		RestaurantMenu resMenu = new RestaurantMenu(common,menu);
-		
-		
-		return resMenu;
+		session.save(resMenu);
+	}
+	private static RestaurantMenu getRestaurantMenu() throws Exception
+	{
+		session = Server.getSession();
+		CriteriaBuilder builder= session.getCriteriaBuilder();
+		CriteriaQuery<RestaurantMenu> query= builder.createQuery(RestaurantMenu.class);
+		query.from(RestaurantMenu.class);
+		RestaurantMenu data= session.createQuery(query).uniqueResult();
+		return data;
 	}
 	private static List<Food> getAllFood() throws Exception
 	{
@@ -274,7 +290,7 @@ public class App
 			ingredient.print();
 		}
 	}
-	public static void viewMenu() throws Exception
+	/*public static void viewMenu() throws Exception
 	{
 		RestaurantMenu resMenu = generateResturantMenu();
 		BaseMenu base = resMenu.getcommon();
@@ -315,7 +331,7 @@ public class App
 			dessert.print();
 		}
 		//session.flush();
-	}
+	}*/
 	public static void generateEmployees() throws Exception
 	{
 		session = Server.getSession();
@@ -434,10 +450,9 @@ public class App
     	//Hours.setOpeningHours(int day, LocalTime open, LocalTime close);
     	List<DiningSpace> Spaces = new ArrayList<>();
     	
-    	RestaurantMenu resMenu = generateResturantMenu();
+    	RestaurantMenu resMenu = getRestaurantMenu();
     	session.save(Address);
     	session.save(Hours);
-    	session.save(resMenu);
     	Restaurant res1 = new Restaurant(Name,Address,Telephone,Staff,Hours,Spaces,resMenu);
     	
     	
@@ -463,5 +478,15 @@ public class App
     	mainCompany.AddRestaurant(res2);
     	
     	session.save(mainCompany);
+	}
+	
+	public static List<Restaurant> getAllRestaurants()
+	{
+		session = Server.getSession();
+		CriteriaBuilder builder= session.getCriteriaBuilder();
+		CriteriaQuery<Restaurant> query= builder.createQuery(Restaurant.class);
+		query.from(Restaurant.class);
+		List<Restaurant> data= session.createQuery(query).getResultList();
+		return data;
 	}
 }

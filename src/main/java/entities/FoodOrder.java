@@ -26,6 +26,10 @@ public class FoodOrder {
 	private LocalDateTime Time; 
 	private FoodOrder_Status Status;
 	
+	public FoodOrder() {
+		super();
+	}
+	
 	public FoodOrder(int id, Menu order, float totalPrice, Costumer costumer, float shippingFee, Transaction payment, LocalDateTime time, FoodOrder_Status status) {
 		this.id = id;
 		Order = order;

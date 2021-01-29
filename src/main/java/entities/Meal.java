@@ -35,6 +35,9 @@ public Meal(String name, String description,double price,List<Ingredients>  ingr
 	this.ingredient = ingredient;
 	this.ingredients = ingredients;
 }
+public Meal() {
+	super();
+}
 public void setNewIng(List<Ingredients> newIng)
 {
 	ingredient=newIng;

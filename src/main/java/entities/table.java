@@ -27,6 +27,10 @@ public class table {
 	int Capacity;
 	boolean isReserved;
 	
+	public table() {
+		super();
+	}
+	
 	public table(int Capacity)
 	{
 		this.Capacity = Capacity;

@@ -6,6 +6,11 @@ import java.util.List;
 public class FoodOrderReport extends Report {
 
 	private  float TotalPrice;
+	
+	public FoodOrderReport() {
+		super();
+	}
+	
 	public FoodOrderReport(int id, int RestaurantId, LocalDateTime Time, List<NumberByDate> Numbers, float TotalPrice) {
 		super(id, RestaurantId, Time, Numbers);
 		this.TotalPrice =  TotalPrice;
