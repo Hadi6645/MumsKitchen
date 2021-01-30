@@ -34,9 +34,9 @@ public class Menu implements java.io.Serializable{
 	List<Dessert> desserts;
 
 public Menu(List<Meal> meals,List<Drink> drinks,List<Dessert> desserts) {
-	this.meals = meals;
-	this.drinks = drinks;
-	this.desserts = desserts;
+	this.meals=meals;
+	this.drinks=drinks;
+	this.desserts=desserts;
 }
 
 public Menu() {

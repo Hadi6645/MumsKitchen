@@ -38,8 +38,8 @@ public class PrimaryController {
      	//Company company = new Company();
          //company = App.start_company();
         //listView_2 = (ListView<Restaurant>) company.getRestaurants();
-         List<Restaurant> res =  (List<Restaurant>) cache.requestRestaurants();
-         cache.setCachedRestaurants(res);
+    	cache.requestRestaurants();
+         List<Restaurant> res = cache.getCachedRestaurants();
         //res = company.getRestaurants();
         for(int i=0; i<res.size();i++) {
      	   listViewData1.add(res.get(i).getName());

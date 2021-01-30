@@ -56,6 +56,7 @@ public class Server extends AbstractServer {
 		configuration.addAnnotatedClass(DiningSpace.class);
 		configuration.addAnnotatedClass(RestaurantMenu.class);
 		configuration.addAnnotatedClass(table.class);
+		configuration.addAnnotatedClass(Menu.class);
 		ServiceRegistry serviceRegistry= new StandardServiceRegistryBuilder()
 				.applySettings(configuration.getProperties()).build();
 		return configuration.buildSessionFactory(serviceRegistry);
@@ -126,13 +127,20 @@ public class Server extends AbstractServer {
 		return true;
 	}
 	
-	/*private List<Restaurant> getRestaurauntsFromDB()
+	private List<Restaurant> getRestaurauntsFromDB()
 	{
 		List<Restaurant> restaurants = null;
-		restaurants.addAll(App.getAllRestaurants());
-		
+		restaurants = App.getAllRestaurants();
 		return restaurants;
-	}*/
+	}
+	private List<Food> getMenuFromDB(Object id) //CHANGE to generic later!!!!!
+	{
+		int restId = (int) id;
+		List<Food> food;
+		food = App.getAllFood();
+		
+		return food;
+	}
 
 	@Override
 	protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
@@ -157,7 +165,9 @@ public class Server extends AbstractServer {
 		switch(instruction) {
 		case CHECK_EMPLOYEE_EXISTS: response = this.checkEmployeeExists(data);
 			break;
-		case GET_RESTAURANTS_LIST: response = App.getAllRestaurants();
+		case GET_RESTAURANTS_LIST: response = this.getRestaurauntsFromDB();
+			break;
+		case GET_MENU: response = this.getMenuFromDB(data);
 		default:
 			break;
 		}

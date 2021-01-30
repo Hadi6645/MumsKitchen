@@ -201,7 +201,7 @@ public class App
 		return data;
 	}
 	
-	static void generateBaseMenu() throws Exception
+	static void generateBaseMenu() throws Exception //change the constructor dont forget!
 	{
 		List<Meal> meals = getAllMeals();
 		List<Drink> drinks = getAllDrinks();
@@ -217,12 +217,12 @@ public class App
 		List<Dessert> baseDesserts = new ArrayList<Dessert>();
 		baseDesserts.add(desserts.get(1));
 		
-		BaseMenu common = new BaseMenu(getAllMeals(),getAllDrinks(),getAllDesserts());
+		BaseMenu common = new BaseMenu(getAllMeals(),getAllDrinks(),getAllDesserts()); 
 		
 		session.save(common);
 	}
 	
-	private static BaseMenu getBaseMenu() throws Exception
+	static BaseMenu getBaseMenu()
 	{
 		session = Server.getSession();
 		CriteriaBuilder builder= session.getCriteriaBuilder();
@@ -262,7 +262,7 @@ public class App
 		RestaurantMenu data= session.createQuery(query).uniqueResult();
 		return data;
 	}
-	private static List<Food> getAllFood() throws Exception
+	static List<Food> getAllFood()
 	{
 		session = Server.getSession();
 		CriteriaBuilder builder= session.getCriteriaBuilder();
@@ -450,7 +450,7 @@ public class App
     	//Hours.setOpeningHours(int day, LocalTime open, LocalTime close);
     	List<DiningSpace> Spaces = new ArrayList<>();
     	
-    	RestaurantMenu resMenu = getRestaurantMenu();
+    	BaseMenu resMenu = getBaseMenu();
     	session.save(Address);
     	session.save(Hours);
     	Restaurant res1 = new Restaurant(Name,Address,Telephone,Staff,Hours,Spaces,resMenu);

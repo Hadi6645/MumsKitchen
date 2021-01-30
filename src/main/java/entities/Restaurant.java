@@ -37,14 +37,14 @@ public class Restaurant implements java.io.Serializable{
     @ElementCollection(targetClass=DiningSpace.class)
 	private List<DiningSpace> Spaces;
 	@OneToOne
-	private RestaurantMenu Menu;
+	private Menu Menu;
 	
 	
 	public Restaurant() {
 		
 	}
 	
-	public Restaurant(int id, String Name, Address Address, String Telephone, List<Employee> Staff, OpeningHours Hours, List<DiningSpace> Spaces, RestaurantMenu Menu)
+	public Restaurant(int id, String Name, Address Address, String Telephone, List<Employee> Staff, OpeningHours Hours, List<DiningSpace> Spaces, Menu Menu)
 	{
 		this.id =  id;
 	    this.Name = Name;
@@ -56,7 +56,7 @@ public class Restaurant implements java.io.Serializable{
 	    this.Menu = Menu;
 	}
 	
-	public Restaurant(String Name, Address Address, String Telephone, List<Employee> Staff, OpeningHours Hours, List<DiningSpace> Spaces, RestaurantMenu Menu)
+	public Restaurant(String Name, Address Address, String Telephone, List<Employee> Staff, OpeningHours Hours, List<DiningSpace> Spaces, Menu Menu)
 	{
 	    this.Name = Name;
 		this.Address = Address ;
@@ -98,7 +98,7 @@ public class Restaurant implements java.io.Serializable{
 		return Spaces;
 	}
 	
-	public RestaurantMenu getMenu()
+	public Menu getMenu()
 	{
 		return Menu;
 	}
