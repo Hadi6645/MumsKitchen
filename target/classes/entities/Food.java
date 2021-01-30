@@ -18,7 +18,11 @@ import clientServer.Server;
 
 @Entity
 @Table(name = "food")
-public abstract class Food {
+public abstract class Food implements java.io.Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	int id;
@@ -33,6 +37,9 @@ public Food(String name,String description,double price)
 	this.name = name;
 	this.description = description;
 	this.price = price;
+}
+public Food() {
+	// TODO Auto-generated constructor stub
 }
 public int getID()
 {

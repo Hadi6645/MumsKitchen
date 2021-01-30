@@ -8,13 +8,19 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import java.io.Serializable;
 import java.util.List;
 
 
 
 @Entity
 @Table(name = "restaurant")
-public class Restaurant {
+public class Restaurant implements java.io.Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
@@ -31,14 +37,14 @@ public class Restaurant {
     @ElementCollection(targetClass=DiningSpace.class)
 	private List<DiningSpace> Spaces;
 	@OneToOne
-	private RestaurantMenu Menu;
+	private Menu Menu;
 	
 	
 	public Restaurant() {
 		
 	}
 	
-	public Restaurant(int id, String Name, Address Address, String Telephone, List<Employee> Staff, OpeningHours Hours, List<DiningSpace> Spaces, RestaurantMenu Menu)
+	public Restaurant(int id, String Name, Address Address, String Telephone, List<Employee> Staff, OpeningHours Hours, List<DiningSpace> Spaces, Menu Menu)
 	{
 		this.id =  id;
 	    this.Name = Name;
@@ -50,7 +56,7 @@ public class Restaurant {
 	    this.Menu = Menu;
 	}
 	
-	public Restaurant(String Name, Address Address, String Telephone, List<Employee> Staff, OpeningHours Hours, List<DiningSpace> Spaces, RestaurantMenu Menu)
+	public Restaurant(String Name, Address Address, String Telephone, List<Employee> Staff, OpeningHours Hours, List<DiningSpace> Spaces, Menu Menu)
 	{
 	    this.Name = Name;
 		this.Address = Address ;
@@ -92,7 +98,7 @@ public class Restaurant {
 		return Spaces;
 	}
 	
-	public RestaurantMenu getMenu()
+	public Menu getMenu()
 	{
 		return Menu;
 	}

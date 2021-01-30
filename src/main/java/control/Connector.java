@@ -20,7 +20,7 @@ public class Connector {
 		ChatClientCLI clientCli = new ChatClientCLI();
 		try {
 			clientCli.sendInstructionToServer(sInstruction,completableFuture);
-			response = (boolean)completableFuture.get(TIMEOUT,TimeUnit.SECONDS);	
+			response = completableFuture.get(TIMEOUT,TimeUnit.SECONDS);	
 		} catch (TimeoutException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

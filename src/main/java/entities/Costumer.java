@@ -11,6 +11,9 @@ public class Costumer {
 	private List<CreditCard> CreditCard;
 	int id;
 	
+	public Costumer() {
+		
+	}
 	public Costumer(String FirstName,String LastName, String Phone,
 	String Email,
 	Address Address,

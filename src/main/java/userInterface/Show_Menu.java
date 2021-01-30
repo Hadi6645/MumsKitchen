@@ -11,8 +11,12 @@ import java.util.List;
 import control.Cache;
 import entities.Dessert;
 import entities.Drink;
+import entities.Employee;
+import entities.Food;
 import entities.Meal;
+import entities.Menu;
 import entities.Restaurant;
+import enums.EmployeeRole;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -38,20 +42,37 @@ public class Show_Menu {
     public void initialize() {
     // String val = null;
     	Cache cache= Cache.getCache();
-    	Restaurant restaurant ;
+    	cache.requestMenu(cache.getRestId());
+    	//Restaurant restaurant ;
     	//restaurant = PrimaryController.get_Restaurant();
-    	restaurant = cache.getRestaurant();
-    	 List<Meal> Meals = new ArrayList<Meal>();
+    	//restaurant = cache.getRestaurant();
+    	 //List<Restaurant> rests = cache.getCachedRestaurants();
+    	 //Menu restMenu;
+    	 List<Food> foods = cache.getCachedFood();
+    	 //List<Meal> Meals = new ArrayList<Meal>();
     	// System.out.println("hiiiiiiiiiiiiiiiiiiiiii");
-    	 Meals = restaurant.getMenu().get_meals();
+    	 //restaurant = rests.get(cache.getRestId());
+    	 //restMenu = cache.getCachedMenu();
+    	 
+    	 /*Meals = restMenu.getmeals();
     
     	 List<Drink> Drinks = new ArrayList<Drink>();
-    	 Drinks = restaurant.getMenu().get_drinks();
+    	 Drinks = restMenu.getdrinks();
     	 
     	 List<Dessert> Desserts = new ArrayList<Dessert>();
-    	 Desserts = restaurant.getMenu().get_dessert();
+    	 Desserts = restMenu.getdesserts();*/
     	 
-    	 for(int i=0; i<Meals.size();i++) {
+    	 for(Food food : foods)
+ 		 {
+    		 if(food.getClass() == Meal.class)
+    			 listViewData_meals.add(food.getName());
+    		 if(food.getClass() == Drink.class)
+    			 listViewData_drinks.add(food.getName());
+    		 if(food.getClass() == Dessert.class)
+    			 listViewData_desserts.add(food.getName());
+ 		 }
+    	
+    	 /*for(int i=0; i<Meals.size();i++) {
        	   listViewData_meals.add(Meals.get(i).getName());
           }
     	 
@@ -61,7 +82,7 @@ public class Show_Menu {
     	 
     	 for(int i=0; i<Desserts.size();i++) {
        	   listViewData_desserts.add(Desserts.get(i).getName());
-          }
+          }*/
     	 
     	 // Init meals_list.
     	 meals_list.setItems(listViewData_meals);

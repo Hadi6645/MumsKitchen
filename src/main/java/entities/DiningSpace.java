@@ -29,6 +29,10 @@ public class DiningSpace {
     
     private boolean isSmokingAllowed;
     
+    public DiningSpace() {
+		super();
+	}
+    
     public DiningSpace(Type type, boolean isSmokingAllowed)
     {
     	this.type = type;

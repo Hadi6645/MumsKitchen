@@ -28,6 +28,10 @@ public class Complaint {
 	private int TransactionId;
 	private ComplaintStatus Status;
 	
+	public Complaint()
+	{
+		
+	}
 	public Complaint(int id, Costumer Costumer, Restaurant Restaurant, String Description, LocalDateTime Time, ComplaintType Type, ComplaintStatus Status)
 	{
 		this.id =  id;

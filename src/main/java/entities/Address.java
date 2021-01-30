@@ -9,14 +9,23 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "address")
-public class Address {
+public class Address implements java.io.Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	private String City;
 	private String Street;
 	private int HouseNumber;
+	
+	public Address()
+	{
+		
+	}
 	
 	public Address(String City, String Street, int HouseNumber )
 	{

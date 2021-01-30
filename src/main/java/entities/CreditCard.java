@@ -19,6 +19,10 @@ public class CreditCard {
 	private String CVV;
 	private LocalDate ExpirationDate;
 	
+	public CreditCard() {
+		
+	}
+	
 	public CreditCard(int id, String CardNumber, String CVV,LocalDate ExpirationDate)
 	{
 		this.id = id;

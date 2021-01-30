@@ -3,6 +3,8 @@ package clientServer;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
@@ -24,6 +26,11 @@ public class Server extends AbstractServer {
 	
 	private static Session session;
 	private static SessionFactory sessionFactory;
+	
+	public Server(int port) {
+		super(port);
+	}
+	
 	public static Session getSession()
 	{
 		return session;
@@ -49,6 +56,7 @@ public class Server extends AbstractServer {
 		configuration.addAnnotatedClass(DiningSpace.class);
 		configuration.addAnnotatedClass(RestaurantMenu.class);
 		configuration.addAnnotatedClass(table.class);
+		configuration.addAnnotatedClass(Menu.class);
 		ServiceRegistry serviceRegistry= new StandardServiceRegistryBuilder()
 				.applySettings(configuration.getProperties()).build();
 		return configuration.buildSessionFactory(serviceRegistry);
@@ -64,6 +72,8 @@ public class Server extends AbstractServer {
 			App.generateMeals();
 			App.generateDrinks();
 			App.generateDesserts();
+			App.generateBaseMenu();
+			App.generateResturantMenu();
 			App.generateEmployees();
 			App.generateCompany(); //important to keep in that order.
 			App.generateRestaurants();
@@ -117,8 +127,19 @@ public class Server extends AbstractServer {
 		return true;
 	}
 	
-	public Server(int port) {
-		super(port);
+	private List<Restaurant> getRestaurauntsFromDB()
+	{
+		List<Restaurant> restaurants = null;
+		restaurants = App.getAllRestaurants();
+		return restaurants;
+	}
+	private List<Food> getMenuFromDB(Object id) //CHANGE to generic later!!!!!
+	{
+		int restId = (int) id;
+		List<Food> food;
+		food = App.getAllFood();
+		
+		return food;
 	}
 
 	@Override
@@ -144,6 +165,9 @@ public class Server extends AbstractServer {
 		switch(instruction) {
 		case CHECK_EMPLOYEE_EXISTS: response = this.checkEmployeeExists(data);
 			break;
+		case GET_RESTAURANTS_LIST: response = this.getRestaurauntsFromDB();
+			break;
+		case GET_MENU: response = this.getMenuFromDB(data);
 		default:
 			break;
 		}

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -18,7 +19,12 @@ import org.hibernate.annotations.Type;
 
 
 @Entity
-public class RestaurantMenu {
+public class RestaurantMenu implements java.io.Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,6 +36,10 @@ public class RestaurantMenu {
 	BaseMenu common;
 	@OneToOne
 	Menu indvidual;
+	
+	public RestaurantMenu() {
+		
+	}
 	
 	public RestaurantMenu(BaseMenu common,Menu ind) {
 		this.common = common;
