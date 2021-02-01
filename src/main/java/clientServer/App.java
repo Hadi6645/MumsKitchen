@@ -34,8 +34,10 @@ import entities.Menu;
 import entities.OpeningHours;
 import entities.Restaurant;
 import entities.RestaurantMenu;
+import entities.table;
 import enums.EmployeeRole;
 import enums.Temperature;
+import enums.Type;
 
 public class App
 {
@@ -271,6 +273,76 @@ public class App
 		List<Food> data= session.createQuery(query).getResultList();
 		return data;
 	}
+	
+	public static void generateTables()
+	{
+		session = Server.getSession();
+		table table2 = new table(2);
+		table table3 = new table(3);
+		table table4 = new table(4);
+		session.save(table2); //1
+		session.save(table3); //2
+		session.save(table4); //3
+		session.flush();
+	}
+	
+	static List<table> getAllTables()
+	{
+		session = Server.getSession();
+		CriteriaBuilder builder= session.getCriteriaBuilder();
+		CriteriaQuery<table> query= builder.createQuery(table.class);
+		query.from(table.class);
+		List<table> data= session.createQuery(query).getResultList();
+		return data;
+	}
+
+	public static void generateDiningspace()
+	{
+		session = Server.getSession();
+		Type inside = Type.INSIDE;
+		 Type outside = Type.OUTSIDE;
+	     List<table> tables = getAllTables();
+		 DiningSpace insideRes =  new DiningSpace(inside, false); 
+		 DiningSpace outsideRes =  new DiningSpace(outside, true);
+		 
+		 insideRes.addTable(tables.get(1));
+		 insideRes.addTable(tables.get(1));
+		 insideRes.addTable(tables.get(1));
+		 insideRes.addTable(tables.get(2));
+		 insideRes.addTable(tables.get(2));
+		 insideRes.addTable(tables.get(2));
+		 insideRes.addTable(tables.get(2));
+		 insideRes.addTable(tables.get(3));
+		 insideRes.addTable(tables.get(3));
+		 insideRes.addTable(tables.get(3));
+		 insideRes.addTable(tables.get(3));
+		 insideRes.addTable(tables.get(3));
+		 
+		 outsideRes.addTable(tables.get(1));
+		 outsideRes.addTable(tables.get(1));
+		 outsideRes.addTable(tables.get(2)); 
+		 outsideRes.addTable(tables.get(2));
+		 outsideRes.addTable(tables.get(3));
+		 outsideRes.addTable(tables.get(3));
+		 outsideRes.addTable(tables.get(3));
+		 session.save(insideRes);
+		 session.save(outsideRes);
+		 session.flush();
+		
+	}
+	
+	static List<DiningSpace> getAllDiningSpace()
+	{
+		session = Server.getSession();
+		CriteriaBuilder builder= session.getCriteriaBuilder();
+		CriteriaQuery<DiningSpace> query= builder.createQuery(DiningSpace.class);
+		query.from(DiningSpace.class);
+		List<DiningSpace> data =  session.createQuery(query).getResultList();
+		return data;
+	}
+	
+	
+	
 	public static Food getMeal(int foodID) throws Exception
 	{
 		Food wantedMeal;
@@ -448,7 +520,9 @@ public class App
     	List<Employee> Staff = new ArrayList<>(); 
     	OpeningHours Hours = new OpeningHours();
     	//Hours.setOpeningHours(int day, LocalTime open, LocalTime close);
-    	List<DiningSpace> Spaces = new ArrayList<>();
+    	//List<DiningSpace> Spaces = new ArrayList<>();
+    	List<DiningSpace> Spaces = getAllDiningSpace();
+    	
     	
     	BaseMenu resMenu = getBaseMenu();
     	session.save(Address);
@@ -462,7 +536,8 @@ public class App
     	List<Employee> Staff2 = new ArrayList<>(); 
     	OpeningHours Hours2 = new OpeningHours();
     	//Hours.setOpeningHours(int day, LocalTime open, LocalTime close);
-    	List<DiningSpace> Spaces2 = new ArrayList<>();
+    	//List<DiningSpace> Spaces2 = new ArrayList<>();
+    	List<DiningSpace> Spaces2 = getAllDiningSpace();
     	session.save(Address2);
     	session.save(Hours2);
     	//RestaurantMenu resMenu2 = generateResturantMenu();
@@ -489,4 +564,6 @@ public class App
 		List<Restaurant> data= session.createQuery(query).getResultList();
 		return data;
 	}
+	
+	
 }
