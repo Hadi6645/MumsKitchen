@@ -1,6 +1,7 @@
 package entities;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -24,12 +25,21 @@ public class Reservation {
 	private CreditCard CreditCard;
 	private Status Status;
 	private String LinkToHealthReport;
+	private List<table> tables;
 	
+	public List<table> getTables() {
+		return tables;
+	}
+
+	public void setTables(List<table> tables) {
+		this.tables = tables;
+	}
+
 	public Reservation() {
 		super();
 	}
 	
-	public Reservation(int id, Costumer Costumer, int GuestsNumber,DiningSpace Space, LocalDateTime Time, CreditCard CreditCard, Status Status, String LinkToHealthReport, Restaurant Restaurant)
+	public Reservation(int id, Costumer Costumer, int GuestsNumber,DiningSpace Space, List<table> tables, LocalDateTime Time,  CreditCard CreditCard, Status Status, String LinkToHealthReport, Restaurant Restaurant)
 	{
 		 this.id  = id;
 		this.Costumer = Costumer;
@@ -40,6 +50,7 @@ public class Reservation {
 		this.CreditCard = CreditCard;
 		this.Status = Status;
 		this.LinkToHealthReport  = LinkToHealthReport;
+		this.tables  = tables;
 	}
 	
 	public Reservation(Costumer Costumer, int GuestsNumber,DiningSpace Space, LocalDateTime Time, CreditCard CreditCard, String LinkToHealthReport, Restaurant Restaurant)

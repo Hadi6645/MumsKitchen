@@ -25,6 +25,7 @@ import entities.BaseMenu;
 import entities.Company;
 import entities.Dessert;
 import entities.DiningSpace;
+
 import entities.Drink;
 import entities.Employee;
 import entities.Food;
@@ -37,7 +38,7 @@ import entities.RestaurantMenu;
 import entities.table;
 import enums.EmployeeRole;
 import enums.Temperature;
-import enums.Type;
+import enums.DiningType;
 
 public class App
 {
@@ -299,8 +300,8 @@ public class App
 	public static void generateDiningspace()
 	{
 		session = Server.getSession();
-		Type inside = Type.INSIDE;
-		 Type outside = Type.OUTSIDE;
+		 DiningType inside =  DiningType.INSIDE;
+		 DiningType outside =  DiningType.OUTSIDE;
 	     List<table> tables = getAllTables();
 		 DiningSpace insideRes =  new DiningSpace(inside, false); 
 		 DiningSpace outsideRes =  new DiningSpace(outside, true);

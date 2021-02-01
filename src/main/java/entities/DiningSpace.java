@@ -1,5 +1,6 @@
 package entities;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -12,7 +13,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import enums.Type;
+import enums. DiningType;
 
 
 @Entity
@@ -21,7 +22,7 @@ public class DiningSpace {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-    private Type type;
+    private DiningType type;
     private int Capacity;
     
     @Column
@@ -34,7 +35,7 @@ public class DiningSpace {
 		super();
 	}
     
-    public DiningSpace(Type type, boolean isSmokingAllowed)
+    public DiningSpace( DiningType type, boolean isSmokingAllowed)
     {
     	this.type = type;
     	this.isSmokingAllowed = isSmokingAllowed;
@@ -45,15 +46,23 @@ public class DiningSpace {
     	tables.add(table);
     }
     
-    public int getCapacity()
+    
+    public int getId() {
+		return id;
+	}
+
+	
+
+	public int getCapacity()
     {
     	return Capacity;
     }
     
-    @SuppressWarnings("null")
+   
 	public List<table> getNonReservedTables(LocalDateTime time1, LocalDateTime time2)
     {
-    	List<table> NonReservedTables = null;
+    	List<table> NonReservedTables= Collections.emptyList();
+
     	for(int i=0; i<tables.size(); i++)
     	{
     		if(tables.get(i).isReserved(time1, time2) == false) NonReservedTables.add(tables.get(i));	
@@ -62,7 +71,15 @@ public class DiningSpace {
     	
     }
     
-    public int getFreeSpaceCount(LocalDateTime time1, LocalDateTime time2)
+    public List<table> getTables() {
+		return tables;
+	}
+
+	public void setTables(List<table> tables) {
+		this.tables = tables;
+	}
+
+	public int getFreeSpaceCount(LocalDateTime time1, LocalDateTime time2)
     {
     	int counter= 0;
     	for(int i=0; i<tables.size(); i++)
@@ -77,7 +94,7 @@ public class DiningSpace {
     	return isSmokingAllowed;
     }
     
-    public Type getSpaceTpye()
+    public DiningType getSpaceTpye()
     {
     	return type;
     }
