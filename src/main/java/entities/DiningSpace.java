@@ -1,4 +1,5 @@
 package entities;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -50,23 +51,23 @@ public class DiningSpace {
     }
     
     @SuppressWarnings("null")
-	public List<table> getNonReservedTables()
+	public List<table> getNonReservedTables(LocalDateTime time1, LocalDateTime time2)
     {
     	List<table> NonReservedTables = null;
     	for(int i=0; i<tables.size(); i++)
     	{
-    		if(tables.get(i).isReserved == false) NonReservedTables.add(tables.get(i));	
+    		if(tables.get(i).isReserved(time1, time2) == false) NonReservedTables.add(tables.get(i));	
     	}
     	return NonReservedTables;
     	
     }
     
-    public int getFreeSpaceCount()
+    public int getFreeSpaceCount(LocalDateTime time1, LocalDateTime time2)
     {
     	int counter= 0;
     	for(int i=0; i<tables.size(); i++)
     	{
-    		if(tables.get(i).isReserved == false) counter ++;
+    		if(tables.get(i).isReserved(time1, time2) == false) counter += tables.get(i).getCapacity();
     	}
     	return counter;
     }

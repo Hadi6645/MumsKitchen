@@ -3,6 +3,7 @@ package clientServer;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +20,7 @@ import entities.*;
 import control.ServerInstruction;
 import control.ServerInstructionType;
 import enums.EmployeeRole;
+import enums.Type;
 import server.ocsf.server.AbstractServer;
 import server.ocsf.server.ConnectionToClient;
 
@@ -74,6 +76,8 @@ public class Server extends AbstractServer {
 			App.generateDesserts();
 			App.generateBaseMenu();
 			App.generateResturantMenu();
+			App.generateTables();
+			App.generateDiningspace();
 			App.generateEmployees();
 			App.generateCompany(); //important to keep in that order.
 			App.generateRestaurants();
@@ -142,6 +146,35 @@ public class Server extends AbstractServer {
 		return food;
 	}
 
+	private List<DiningSpace> getDiningSpaceFromDB() ///////reservation
+	{
+		List<DiningSpace> diningspace = null;
+		diningspace = App.getAllDiningSpace();
+		return diningspace;
+		
+	}
+	
+	private boolean checkUnreservedTables(Object data1, Object data2, Object data3) ///////reservation
+	{
+		LocalDateTime time = (LocalDateTime)(data1);
+		LocalDateTime nextTime = time.plusHours(1);
+		Type diningType = (Type)(data2);
+		int capacity = (int)(data3);
+		
+		if(time == null || diningType == null || capacity == 0) {
+			return false;
+		}
+		Criteria criteria = session.createCriteria(DiningSpace.class);
+		//DiningSpace dining = (DiningSpace) criteria.
+		DiningSpace dining = (DiningSpace) criteria.add(Restrictions.eq("type",data3)).uniqueResult();
+		if( (dining.getNonReservedTables(time, nextTime)) == null || dining.getFreeSpaceCount(time, nextTime)< capacity ) { 
+			return false;
+		}
+		
+		return true;
+	}
+	
+	
 	@Override
 	protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
 		// we need a switch
@@ -168,6 +201,10 @@ public class Server extends AbstractServer {
 		case GET_RESTAURANTS_LIST: response = this.getRestaurauntsFromDB();
 			break;
 		case GET_MENU: response = this.getMenuFromDB(data);
+		    break;
+		case CHECK_UNRESERVED_TABLES: response = this.checkUnreservedTables(data, data, data); ////**********************//
+		   break;
+		case GET_DINING_SPACE: response = this.getDiningSpaceFromDB();
 		default:
 			break;
 		}
@@ -201,6 +238,7 @@ public class Server extends AbstractServer {
 		super.clientConnected(client);
 		System.out.println("Client connected: " + client.getInetAddress());
 	}
+	
 	public static boolean authchange(Food food) throws IOException
 	{
 		String str;
@@ -211,6 +249,8 @@ public class Server extends AbstractServer {
 			return true;
 		else return false;
 	}
+	
+	
 	public static void main(String[] args) throws IOException {
 		//Server server = new Server(3000); //change this port to something else if you want, but remember to update the client's constructor
 		
