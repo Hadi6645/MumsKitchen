@@ -216,14 +216,19 @@ public class App
 		session.flush();
 	}
 	
-	static BaseMenu getBaseMenu()
+	static Menu getBaseMenu()
 	{
-		session = Server.getSession();
-		CriteriaBuilder builder= session.getCriteriaBuilder();
-		CriteriaQuery<BaseMenu> query= builder.createQuery(BaseMenu.class);
-		query.from(BaseMenu.class);
-		BaseMenu data= session.createQuery(query).uniqueResult();
-		return data;
+		List<Menu> allmenus = getAllMenus();
+		Menu menureturn = null;
+		for(Menu menu : allmenus)
+		{
+			if(menu.getClass() == BaseMenu.class)
+			{
+    			 menureturn = menu;
+    			 break;
+			}
+		}
+		return menureturn;
 	}
 	
 	static void generateResturantMenu() throws Exception
@@ -471,7 +476,7 @@ public class App
     	//Hours.setOpeningHours(int day, LocalTime open, LocalTime close);
     	List<DiningSpace> Spaces = new ArrayList<>();
     	
-    	BaseMenu resMenu = getBaseMenu();
+    	Menu resMenu = getBaseMenu();
     	session.save(Address);
     	session.save(Hours);
     	session.flush();
