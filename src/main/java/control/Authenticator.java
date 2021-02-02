@@ -1,5 +1,7 @@
 package control;import java.io.IOException;
+
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -9,9 +11,15 @@ import java.util.concurrent.TimeoutException;
 import clientServer.ChatClientCLI;
 import clientServer.Client;
 import entities.Employee;
+import entities.Reservation;
 import enums.EmployeeRole;
+import entities.table;
+import entities.Reservation;
+import java.time.LocalDateTime;
 
 public class Authenticator {
+	
+	
 	
 	private static Authenticator authenticator;
 	//private static Map<String, String> cachedEmployees;
@@ -64,5 +72,18 @@ public class Authenticator {
 	
 	public boolean requestUpdateMenuPermission(Employee employee) {
 		return employee.getRole() == EmployeeRole.DIETITION;
+	}
+	
+	
+	public boolean requestReservationPermission(List<table> tableList, int capacity)
+	{
+		int count = 0;
+		//table table = tableList.get(0);
+		for(int i = 0; i< tableList.size(); i++)
+		{
+			count += tableList.get(i).getCapacity();
+		}
+		if (count < capacity ) return false;
+		return true;
 	}
 }

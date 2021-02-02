@@ -4,7 +4,7 @@ import javax.persistence.Entity;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-
+import java.time.LocalDateTime;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -26,6 +26,7 @@ public class table {
 	int id;
 	int Capacity;
 	boolean isReserved;
+	//private LocalDateTime Time;
 	
 	public table() {
 		super();
@@ -41,16 +42,16 @@ public class table {
 		return Capacity;
 	}
 	
-	public void Reserve()
+	public void setReserve(LocalDateTime time1, LocalDateTime time2)
 	{
 		isReserved = true;
 	}
-	public void unReserve()
+	public void setUnReserve(LocalDateTime time1, LocalDateTime time2)
 	{
 		isReserved = false;
 	}
 	
-	public boolean isReserved()
+	public boolean isReserved(LocalDateTime time1, LocalDateTime time2)
 	{
 		return isReserved;
 	}

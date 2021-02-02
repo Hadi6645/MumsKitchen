@@ -2,6 +2,7 @@ package control;
 
 import java.util.List;
 
+import entities.DiningSpace;
 import entities.Food;
 import entities.Menu;
 import entities.Restaurant;
@@ -13,6 +14,7 @@ public class Cache {
 	List<Restaurant> cachedRestaurants;
 	Menu cachedMenu;
 	List<Food> cachedFood;
+	DiningSpace cachedDining;
 	private static Cache cache;
 	
 	private Cache() {
@@ -53,6 +55,16 @@ public class Cache {
 		response = Connector.connectToServer(sInstruction);
 		cache.setCachedFood((List<Food>)response);
 	}
+	
+	public void requestDiningSpace(int id) {  /////////////////
+		ServerInstruction sInstruction = new ServerInstruction(ServerInstructionType.GET_DINING_SPACE,id);
+		Object response ;
+		// send instruction to the server and get a response	
+		response = Connector.connectToServer(sInstruction);
+		cache.setCachedDining((DiningSpace)response);
+	}
+	
+	
 	public List<Food> getCachedFood() {
 		return cachedFood;
 	}
@@ -70,5 +82,12 @@ public class Cache {
 	}
 	public void setCachedMenu(Menu menu) {
 		this.cachedMenu = menu;
+	}
+	
+	public DiningSpace getCachedDining() {
+		return cachedDining;
+	}
+	public void setCachedDining(DiningSpace cachedDining) {
+		this.cachedDining = cachedDining;
 	}
 }

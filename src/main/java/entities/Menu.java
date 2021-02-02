@@ -1,8 +1,9 @@
 package entities;
 
+import entities.Drink;
+
 import java.util.ArrayList;
 import java.util.List;
-import entities.Drink;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;

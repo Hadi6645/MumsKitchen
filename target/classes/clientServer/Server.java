@@ -252,6 +252,9 @@ public class Server extends AbstractServer {
 		case GET_RESTAURANTS_LIST: response = this.getRestaurauntsFromDB();
 			break;
 		case GET_MENU: response = this.getMenuFromDB(data);
+			break;
+		case CHECK_UNRESERVED_TABLES: response = this.getReservationTables(data);
+		   break;
 		default:
 			break;
 		}
