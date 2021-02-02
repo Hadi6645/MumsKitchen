@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import enums.DiningType;
 import enums.Status;
 
 @Entity
@@ -47,6 +48,13 @@ public class Reservation {
 
 	public Reservation() {
 		super();
+	}
+	
+	public Reservation(int GuestsNumber, DiningType Space, LocalDateTime Time)
+	{
+		this.GuestsNumber = GuestsNumber;
+		this.Space.setType(Space);/***********************************************************/
+		this.Time = Time;
 	}
 	
 	public Reservation(int id, Customer Customer, int GuestsNumber,DiningSpace Space, List<table> tables, LocalDateTime Time,  CreditCard CreditCard, Status Status, List<HealthReportSignature> GuestsSignatures , Restaurant Restaurant)

@@ -16,4 +16,12 @@ public class DataService {
 		return response.size() > 0;
 	}
 
+	public int sendReservation(Reservation reserve)   // reservation complete 
+	{
+		Reservation data = reserve;
+		ServerInstruction sInstruction = new ServerInstruction(ServerInstructionType.MAKE_RESERVATION, data);
+		// send instruction to the server and get a response	
+		int response = (int)Connector.connectToServer(sInstruction);
+		return response;
+	}
 }
