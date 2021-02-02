@@ -102,13 +102,17 @@ public class Restaurant implements java.io.Serializable{
 	{
 		return Menu;
 	}
-	 public void addEmployee(Employee employee)
-	 {
-		 Staff.add(employee);
-	 }
-	 
-	 public int getId()
-	 {
-		 return id;
-	 }
+	public int getMenuId()
+	{
+		return Menu.getMenu_id();
+	}
+	public void addEmployee(Employee employee)
+	{
+		Staff.add(employee);
+	}
+	
+	public int getId()
+	{
+		return id;
+	}
 }

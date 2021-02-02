@@ -3,7 +3,6 @@ package clientServer;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,6 +10,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
@@ -18,7 +20,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.criterion.CriteriaQuery;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.service.ServiceRegistry;
 
@@ -26,7 +27,6 @@ import entities.*;
 import control.ServerInstruction;
 import control.ServerInstructionType;
 import enums.EmployeeRole;
-import enums. DiningType;
 import server.ocsf.server.AbstractServer;
 import server.ocsf.server.ConnectionToClient;
 
@@ -82,13 +82,11 @@ public class Server extends AbstractServer {
 			App.generateDesserts();
 			App.generateBaseMenu();
 			App.generateResturantMenu();
-			App.generateTables();
-			App.generateDiningspace();
 			App.generateEmployees();
 			App.generateCompany(); //important to keep in that order.
 			App.generateRestaurants();
 			
-
+			session.getTransaction().commit();
 		} catch(Exception exception) {
 			if(session != null)
 			{
@@ -104,7 +102,7 @@ public class Server extends AbstractServer {
 	private boolean addToDatabase(Object data) {
 		try {
 			session.save(data);
-			//session.flush();
+			session.flush();
 			return true;
 			//finally block is executed always even if you put a return statement in the try block. 
 			//The finally block will be executed before the return statement.
@@ -120,52 +118,31 @@ public class Server extends AbstractServer {
 		} 
 	}
 	
-	private boolean checkEmployeeExists(Object data) {
-		String[] info = (String[])(data);
-		if(info == null) {
-			// log error
-			return false;
-		}
-		// check in database
-		Criteria criteria = session.createCriteria(Employee.class);
-		Employee emp = (Employee) criteria.add(Restrictions.eq("id", info[0])).uniqueResult();
-
-		//Employee emp =  (Employee)session.get(Employee.class, info[0]);
-		if(emp == null || !emp.getPassword().equals(info[1])) { // if not found or wrong password
-			return false;
-		}
-		return true;
-	}
-	
-	private List<Restaurant> getRestaurauntsFromDB()
-	{
-		List<Restaurant> restaurants = null;
-		restaurants = App.getAllRestaurants();
-		return restaurants;
-	}
-	private List<Food> getMenuFromDB(Object id) //CHANGE to generic later!!!!!
-	{
-		int restId = (int) id;
-		List<Food> food;
-		food = App.getAllFood();
-		
-		return food;
-	}
-
-	private List<DiningSpace> getDiningSpaceFromDB() ///////reservation
-	{
-		List<DiningSpace> diningspace = null;
-		diningspace = App.getAllDiningSpace();
-		return diningspace;
-		
-	}
-	
 	private List<Reservation> getReservations(int resID, int spaceID,  LocalDateTime day)
 	{
-		
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Reservation> query= builder.createQuery(Reservation.class);
+	    Root<Reservation> reservations = query.from(Reservation.class);
+
+	    //Constructing list of parameters
+	    List<Predicate> predicates = new ArrayList<Predicate>();
+	    predicates.add(builder.equal(reservations.get("restaurantId"), resID));
+	    predicates.add(builder.equal(reservations.get("diningSpaceId"), spaceID));
+	    //query itself
+	    query.select(reservations).where(predicates.toArray(new Predicate[]{}));
+	    //execute query and do something with result
+	    List<Reservation> result = session.createQuery(query).getResultList();
+	    LocalDateTime begin = day.toLocalDate().atStartOfDay(); // 00:00:00
+	    LocalDateTime end = begin.plusHours(24).minusSeconds(1); // 23:59:59
+	    return result.stream().filter(resv -> resv.getTime().isAfter(begin) && resv.getTime().isBefore(end))
+	    		.collect(Collectors.toList());
 	}
 	
-	private List<table> getResevationTables(Reservation reservation){
+	private List<table> getReservationTables(Object data){
+		Reservation reservation = (Reservation)(data);
+		if(reservation == null) {
+			System.err.println("error in getResevationTables,reservation is null .\n");
+		}
 		Restaurant res = reservation.getRestaurant();
 		DiningSpace space = reservation.getSpace();
 		LocalDateTime time = reservation.getTime();
@@ -178,7 +155,7 @@ public class Server extends AbstractServer {
 		for(int i=0; i< reservations.size(); i++)
 		{
 			reservations.get(i).getTables().forEach(table -> {
-				availableTables.remove(table); //***** not sure if it works
+				availableTables.remove(table); //*** not sure if it works
 			});
 		}
 		
@@ -220,53 +197,35 @@ public class Server extends AbstractServer {
 		return optimal;
 	}
 	
-	private boolean checkUnreservedTables(Object data) ///////reservation
-	{
-		Reservation res = (Reservation)(data);
-		LocalDateTime time = res.getTime();
-		LocalDateTime nextTime = time.plusHours(1);
-		 DiningType diningType = res.getSpace().getSpaceTpye();
-		int capacity = res.getGuestsNumber();
-		
-		if(time == null || diningType == null || capacity == 0) {
+	private boolean checkEmployeeExists(Object data) {
+		String[] info = (String[])(data);
+		if(info == null) {
+			// log error
 			return false;
 		}
-		
-		CriteriaBuilder qb = session.getCriteriaBuilder();
-	    CriteriaQuery cq = (CriteriaQuery) qb.createQuery();
-	    Root<A> customer = cq.from(A.class);
+		// check in database
+		Criteria criteria = session.createCriteria(Employee.class);
+		Employee emp = (Employee) criteria.add(Restrictions.eq("id", info[0])).uniqueResult();
 
-	    //Constructing list of parameters
-	    List<Predicate> predicates = new ArrayList<Predicate>();
-
-	    //Adding predicates in case of parameter not being null
-	    if (param1 != null) {
-	        predicates.add(
-	                qb.equal(customer.get("someAttribute"), param1));
-	    }
-	    if (paramNull != null) {
-	        predicates.add(
-	                qb.equal(customer.get("someOtherAttribute"), paramNull));
-	    }
-	    //query itself
-	    cq.select(customer)
-	            .where(predicates.toArray(new Predicate[]{}));
-	    //execute query and do something with result
-	    em.createQuery(cq).getResultList();
-	    
-	    
-	    
-		Criteria criteria = session.createCriteria(DiningSpace.class);
-		//DiningSpace dining = (DiningSpace) criteria.
-		DiningSpace dining = (DiningSpace) criteria.add(Restrictions.eq("type",data3)).uniqueResult();
-		if( (dining.getNonReservedTables(time, nextTime)) == null || dining.getFreeSpaceCount(time, nextTime)< capacity ) { 
+		//Employee emp =  (Employee)session.get(Employee.class, info[0]);
+		if(emp == null || !emp.getPassword().equals(info[1])) { // if not found or wrong password
 			return false;
 		}
-		
 		return true;
 	}
 	
-	
+	private List<Restaurant> getRestaurauntsFromDB()
+	{
+		List<Restaurant> restaurants;
+		restaurants = App.getAllRestaurants();
+		return restaurants;
+	}
+	private List<Food> getMenuFromDB(Object id) //CHANGE to generic later!!!!!
+	{
+		int restId = (int) id;
+		return App.getRestaurantFood(restId);
+	}
+
 	@Override
 	protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
 		// we need a switch
@@ -293,10 +252,9 @@ public class Server extends AbstractServer {
 		case GET_RESTAURANTS_LIST: response = this.getRestaurauntsFromDB();
 			break;
 		case GET_MENU: response = this.getMenuFromDB(data);
-		    break;
-		case CHECK_UNRESERVED_TABLES: response = this.checkUnreservedTables(data); ////**********************//
+			break;
+		case CHECK_UNRESERVED_TABLES: response = this.getReservationTables(data);
 		   break;
-		case GET_DINING_SPACE: response = this.getDiningSpaceFromDB();
 		default:
 			break;
 		}
@@ -330,7 +288,6 @@ public class Server extends AbstractServer {
 		super.clientConnected(client);
 		System.out.println("Client connected: " + client.getInetAddress());
 	}
-	
 	public static boolean authchange(Food food) throws IOException
 	{
 		String str;
@@ -341,8 +298,6 @@ public class Server extends AbstractServer {
 			return true;
 		else return false;
 	}
-	
-	
 	public static void main(String[] args) throws IOException {
 		//Server server = new Server(3000); //change this port to something else if you want, but remember to update the client's constructor
 		

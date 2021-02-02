@@ -58,19 +58,6 @@ public class DiningSpace {
     	return Capacity;
     }
     
-   
-	public List<table> getNonReservedTables(LocalDateTime time1, LocalDateTime time2)
-    {
-    	List<table> NonReservedTables= Collections.emptyList();
-
-    	for(int i=0; i<tables.size(); i++)
-    	{
-    		if(tables.get(i).isReserved(time1, time2) == false) NonReservedTables.add(tables.get(i));	
-    	}
-    	return NonReservedTables;
-    	
-    }
-    
     public List<table> getTables() {
 		return tables;
 	}
@@ -79,16 +66,6 @@ public class DiningSpace {
 		this.tables = tables;
 	}
 
-	public int getFreeSpaceCount(LocalDateTime time1, LocalDateTime time2)
-    {
-    	int counter= 0;
-    	for(int i=0; i<tables.size(); i++)
-    	{
-    		if(tables.get(i).isReserved(time1, time2) == false) counter += tables.get(i).getCapacity();
-    	}
-    	return counter;
-    }
-    
     public boolean isSmoking()
     {
     	return isSmokingAllowed;
@@ -98,10 +75,4 @@ public class DiningSpace {
     {
     	return type;
     }
-
-    
-    
-   
-    
-	
 }
