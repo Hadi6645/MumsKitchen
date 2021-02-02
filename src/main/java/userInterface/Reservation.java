@@ -97,8 +97,8 @@ public class Reservation {
     	else if(dayName == "Friday") daynum = 6;
     	else if(dayName == "Saturday") daynum = 7;*/
     	
-    	openhour = opening[daynum][1];
-    	closehour = opening[daynum][2];
+    	openhour = opening[daynum][0];
+    	closehour = opening[daynum][1];
     	newhour = openhour.plusMinutes(15);
     	
     	while (newhour != closehour.minusHours(1).plusMinutes(15)) {
@@ -132,13 +132,6 @@ public class Reservation {
            choosen_time = newValue;
         });
         
-      /*  for(int i=0; i<res.size();i++) {
-    		if(res.get(i).getName() == val) {
-    			My_res = res.get(i);
-    			cache.setRestId(My_res.getId());
-    			cache.setRestaurant(My_res);
-    		}
-    	}*/
     	
     	localdatetime = localdatetime.withDayOfMonth(day.getDayOfMonth());
     	localdatetime = localdatetime.withMonth(day.getMonthValue());
