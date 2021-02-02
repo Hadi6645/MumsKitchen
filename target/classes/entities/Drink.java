@@ -45,7 +45,7 @@ public class Drink extends Food{
 	{
 		alcPercent = percent;
 	}
-	@Override
+	/*@Override
 	public boolean update() throws Exception
 	{
 		super.update();
@@ -101,5 +101,5 @@ public class Drink extends Food{
 		}
 	
 		
-	}
+	}*/
 }

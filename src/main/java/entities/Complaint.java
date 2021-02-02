@@ -17,7 +17,7 @@ public class Complaint {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	private Costumer Costumer;
+	private Customer Customer;
 	private Restaurant Restaurant;
 	private String Description;
 	private LocalDateTime Time;
@@ -32,10 +32,10 @@ public class Complaint {
 	{
 		
 	}
-	public Complaint(int id, Costumer Costumer, Restaurant Restaurant, String Description, LocalDateTime Time, ComplaintType Type, ComplaintStatus Status)
+	public Complaint(int id, Customer Customer, Restaurant Restaurant, String Description, LocalDateTime Time, ComplaintType Type, ComplaintStatus Status)
 	{
 		this.id =  id;
-		this.Costumer =  Costumer;
+		this.Customer =  Customer;
 		this.Restaurant =  Restaurant;
 		this.Description = Description;
 		this.Time = Time;
@@ -73,9 +73,9 @@ public class Complaint {
 		return id;
 	}
 	
-	public Costumer getClient()
+	public Customer getClient()
 	{
-		return Costumer;
+		return Customer;
 	}
 	
 	public Restaurant getRestaurant()

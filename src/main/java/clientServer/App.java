@@ -121,7 +121,7 @@ public class App
 		
 		session.save(burger); //0
 		session.save(steak); //1
-		//session.flush();
+		session.flush();
 	}
 	
 	private static List<Meal> getAllMeals() throws Exception
@@ -144,7 +144,7 @@ public class App
 		session.save(cocacola); //0
 		session.save(appleJuice); //1
 		session.save(carlsberg); //2
-		//session.flush();
+		session.flush();
 	}
 	
 	private static List<Drink> getAllDrinks() throws Exception
@@ -188,7 +188,7 @@ public class App
 
 		session.save(cheesecake); //0
 		session.save(chocolatecake); //1
-		//session.flush();
+		session.flush();
 	}
 	
 	private static List<Dessert> getAllDesserts() throws Exception
@@ -203,23 +203,17 @@ public class App
 	
 	static void generateBaseMenu() throws Exception //change the constructor dont forget!
 	{
-		List<Meal> meals = getAllMeals();
-		List<Drink> drinks = getAllDrinks();
-		List<Dessert> desserts = getAllDesserts();
-		
-		List<Meal> baseMeals = new ArrayList<Meal>();
-		baseMeals.add(meals.get(0));
-		
-		List<Drink> baseDrinks = new ArrayList<Drink>();
-		baseDrinks.add(drinks.get(0));
-		baseDrinks.add(drinks.get(1));
-		
-		List<Dessert> baseDesserts = new ArrayList<Dessert>();
-		baseDesserts.add(desserts.get(1));
-		
-		BaseMenu common = new BaseMenu(getAllMeals(),getAllDrinks(),getAllDesserts()); 
-		
+		session = Server.getSession();
+		List<Food> food =getAllFood();
+		BaseMenu common = new BaseMenu();
 		session.save(common);
+		common.setallfood(food);
+		session.save(common);
+		for(Food foodd: food)
+		{
+			session.save(foodd);
+		}
+		session.flush();
 	}
 	
 	static BaseMenu getBaseMenu()
@@ -234,6 +228,7 @@ public class App
 	
 	static void generateResturantMenu() throws Exception
 	{
+		session = Server.getSession();
 		List<Meal> meals = getAllMeals();
 		List<Drink> drinks = getAllDrinks();
 		List<Dessert> desserts = getAllDesserts();
@@ -247,11 +242,11 @@ public class App
 		List<Dessert> resDesserts = new ArrayList<Dessert>();
 		resDesserts.add(desserts.get(0));
 		
-		Menu menu = new Menu(getAllMeals(),getAllDrinks(),getAllDesserts());
-		BaseMenu common = getBaseMenu();
-		session.save(menu);
-		RestaurantMenu resMenu = new RestaurantMenu(common,menu);
-		session.save(resMenu);
+		//Menu menu = new Menu(getAllMeals(),getAllDrinks(),getAllDesserts());
+		//BaseMenu common = getBaseMenu();
+		//session.save(menu);
+		//RestaurantMenu resMenu = new RestaurantMenu(common,menu);
+		//session.save(resMenu);
 	}
 	private static RestaurantMenu getRestaurantMenu() throws Exception
 	{
@@ -261,6 +256,30 @@ public class App
 		query.from(RestaurantMenu.class);
 		RestaurantMenu data= session.createQuery(query).uniqueResult();
 		return data;
+	}
+	static List<Menu> getAllMenus()
+	{
+		session = Server.getSession();
+		CriteriaBuilder builder= session.getCriteriaBuilder();
+		CriteriaQuery<Menu> query= builder.createQuery(Menu.class);
+		query.from(Menu.class);
+		List<Menu> data= session.createQuery(query).getResultList();
+		return data;
+	}
+	static List<Food> getRestaurantFood(int id)
+	{
+		List<Restaurant> rests = getAllRestaurants();
+		Restaurant rest = rests.get(id);
+		List<Menu> allmenus = getAllMenus();
+		int temp = allmenus.indexOf(rest.getMenu());
+		Menu menu = allmenus.get(temp);
+		List<Food> result =  menu.getallfood();
+		for(Food food : result)
+		{
+			//System.out.print(food.getName());
+			System.out.print("");
+		}
+		return result;
 	}
 	static List<Food> getAllFood()
 	{
@@ -278,10 +297,10 @@ public class App
 		wantedMeal = allfood.get(foodID);
 		return wantedMeal;
 	}
-	public static void printmealbyiD(int foodID) throws Exception
+	/*public static void printmealbyiD(int foodID) throws Exception
 	{
 		getMeal(foodID).print();
-	}
+	}*/
 	public static void printIngredients() throws Exception
 	{
 		List<Ingredients> ingr = getAllIngredients();
@@ -359,7 +378,7 @@ public class App
 		session.save(CEOO); //0
 		session.save(Dietitian); //1
 		session.save(manager); //2
-		//session.flush();
+		session.flush();
 	}
 	
 	private static List<Employee> getEmployees() throws Exception
@@ -422,6 +441,7 @@ public class App
 	
 	public static void generateCompany() throws Exception
 	{
+		session = Server.getSession();
 		Employee ceo = getCEO();
 		Employee dietition = getDietition();
 		
@@ -442,6 +462,7 @@ public class App
 	
 	public static void generateRestaurants() throws Exception
 	{
+		session = Server.getSession();
 		String Name = "Haifa Branch";
     	Address Address = new Address("Haifa", "Yefe Nof", 42 );
     	String Telephone = "036427130";
@@ -453,6 +474,7 @@ public class App
     	BaseMenu resMenu = getBaseMenu();
     	session.save(Address);
     	session.save(Hours);
+    	session.flush();
     	Restaurant res1 = new Restaurant(Name,Address,Telephone,Staff,Hours,Spaces,resMenu);
     	
     	
@@ -471,6 +493,7 @@ public class App
     	
     	session.save(res1);
     	session.save(res2);
+    	session.flush();
     	
     	Company mainCompany = getCompany();
     	
@@ -478,6 +501,7 @@ public class App
     	mainCompany.AddRestaurant(res2);
     	
     	session.save(mainCompany);
+    	session.flush();
 	}
 	
 	public static List<Restaurant> getAllRestaurants()

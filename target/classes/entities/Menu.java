@@ -1,14 +1,24 @@
 package entities;
 
+import java.util.ArrayList;
 import java.util.List;
 import entities.Drink;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+
+import org.hibernate.Session;
+
+import clientServer.Server;
 
 @Entity
 @Table(name = "menu")
@@ -20,39 +30,45 @@ public class Menu implements java.io.Serializable{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	int id;
+	private int menu_id;
 	
-	@Column
-    @ElementCollection(targetClass=Meal.class)
-	List<Meal> meals;
+	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+			targetEntity = Food.class)
+			@JoinTable(name="menu_food",
+			joinColumns = @JoinColumn(name = "menu_id"),
+			inverseJoinColumns = @JoinColumn(name = "food_id"))
+	private List<Food> allfood;
+
+	protected static Session session;
+
+
+	public Menu() {
+		// TODO Auto-generated constructor stub
+		 allfood = new ArrayList<Food>();
+	}
+	public Menu(List<Food> foodList) {
+		// TODO Auto-generated constructor stub
+		 allfood = foodList;
+	}
+	public void addfood(Food food) {
+		session = Server.getSession();
+		allfood.add(food);
+		session.save(allfood);
+	}
+	public int getMenu_id() {
+		return menu_id;
+	}
 	
-	@Column
-    @ElementCollection(targetClass=Drink.class)
-	List<Drink> drinks;
-	@Column
-    @ElementCollection(targetClass=Dessert.class)
-	List<Dessert> desserts;
-
-public Menu(List<Meal> meals,List<Drink> drinks,List<Dessert> desserts) {
-	this.meals=meals;
-	this.drinks=drinks;
-	this.desserts=desserts;
-}
-
-public Menu() {
-	// TODO Auto-generated constructor stub
-}
-
-public List<Meal> getmeals()
-{
-	return meals;
-}
-public List<Drink> getdrinks()
-{
-	return drinks;
-}
-public List<Dessert> getdesserts()
-{
-	return desserts;
-}
+	public List<Food> getallfood()
+	{
+		return allfood;
+	}
+	public void setallfood(List<Food> allfood)
+	{
+		for(Food food : allfood)
+		{
+			this.allfood.add(food);
+			food.getMenus().add(this);
+		}
+	}
 }

@@ -3,8 +3,16 @@ package clientServer;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
@@ -78,7 +86,7 @@ public class Server extends AbstractServer {
 			App.generateCompany(); //important to keep in that order.
 			App.generateRestaurants();
 			
-
+			session.getTransaction().commit();
 		} catch(Exception exception) {
 			if(session != null)
 			{
@@ -94,7 +102,7 @@ public class Server extends AbstractServer {
 	private boolean addToDatabase(Object data) {
 		try {
 			session.save(data);
-			//session.flush();
+			session.flush();
 			return true;
 			//finally block is executed always even if you put a return statement in the try block. 
 			//The finally block will be executed before the return statement.
@@ -108,6 +116,85 @@ public class Server extends AbstractServer {
 			// The finally block will be executed before the return statement.
 			return false;
 		} 
+	}
+	
+	private List<Reservation> getReservations(int resID, int spaceID,  LocalDateTime day)
+	{
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Reservation> query= builder.createQuery(Reservation.class);
+	    Root<Reservation> reservations = query.from(Reservation.class);
+
+	    //Constructing list of parameters
+	    List<Predicate> predicates = new ArrayList<Predicate>();
+	    predicates.add(builder.equal(reservations.get("restaurantId"), resID));
+	    predicates.add(builder.equal(reservations.get("diningSpaceId"), spaceID));
+	    //query itself
+	    query.select(reservations).where(predicates.toArray(new Predicate[]{}));
+	    //execute query and do something with result
+	    List<Reservation> result = session.createQuery(query).getResultList();
+	    LocalDateTime begin = day.toLocalDate().atStartOfDay(); // 00:00:00
+	    LocalDateTime end = begin.plusHours(24).minusSeconds(1); // 23:59:59
+	    return result.stream().filter(resv -> resv.getTime().isAfter(begin) && resv.getTime().isBefore(end))
+	    		.collect(Collectors.toList());
+	}
+	
+	private List<table> getReservationTables(Object data){
+		Reservation reservation = (Reservation)(data);
+		if(reservation == null) {
+			System.err.println("error in getResevationTables,reservation is null .\n");
+		}
+		Restaurant res = reservation.getRestaurant();
+		DiningSpace space = reservation.getSpace();
+		LocalDateTime time = reservation.getTime();
+		List<Reservation> reservations = getReservations(res.getId(), space.getId(), time);
+		List<table> availableTables = space.getTables();
+		LocalDateTime time1 =  time.plusHours(2);
+		LocalDateTime time2 =  time.plusHours(-2);
+		reservations = reservations.stream().filter(resv -> resv.getTime().isAfter(time2)  && resv.getTime().isBefore(time1)).collect(Collectors.toList());
+		
+		for(int i=0; i< reservations.size(); i++)
+		{
+			reservations.get(i).getTables().forEach(table -> {
+				availableTables.remove(table); //*** not sure if it works
+			});
+		}
+		
+		return getOptimalTables(availableTables, reservation.getGuestsNumber());
+	}
+	
+	private List<table> getOptimalTables(List<table> availableTables, int guests)
+	{
+		int sum =0;
+		Collections.sort(availableTables, (t1, t2) -> {
+			return t2.getCapacity() - t1.getCapacity();
+		});
+		for(int i=0;i < availableTables.size(); i++)
+		{
+			sum+= availableTables.get(i).getCapacity();
+		}
+		List<table> optimal = Collections.emptyList();
+		if(sum < guests) {
+			return optimal;
+		}
+		// assume avTables are sorted by 4-3-2
+		for(int i=0;i < availableTables.size(); i++)
+		{
+			table table = availableTables.get(i);
+			int cap = table.getCapacity();
+			if (cap == guests) {
+				optimal.add(table);
+				guests -= cap;
+				break; //end the for
+			}
+			if(cap < guests) {
+				optimal.add(table);
+				guests -= cap;
+			}
+		}
+		if(guests>0) {
+			optimal.add(availableTables.get(availableTables.size()-1));
+		}
+		return optimal;
 	}
 	
 	private boolean checkEmployeeExists(Object data) {
@@ -129,17 +216,14 @@ public class Server extends AbstractServer {
 	
 	private List<Restaurant> getRestaurauntsFromDB()
 	{
-		List<Restaurant> restaurants = null;
+		List<Restaurant> restaurants;
 		restaurants = App.getAllRestaurants();
 		return restaurants;
 	}
 	private List<Food> getMenuFromDB(Object id) //CHANGE to generic later!!!!!
 	{
 		int restId = (int) id;
-		List<Food> food;
-		food = App.getAllFood();
-		
-		return food;
+		return App.getRestaurantFood(restId);
 	}
 
 	@Override

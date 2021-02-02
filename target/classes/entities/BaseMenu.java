@@ -13,8 +13,4 @@ public class BaseMenu extends Menu{
 	public BaseMenu() {
 		super();
 	}
-	public BaseMenu(List<Meal> meals,List<Drink> drinks,List<Dessert> desserts)
-	{
-		super(meals,drinks,desserts);
-	}
 }

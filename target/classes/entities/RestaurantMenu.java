@@ -55,7 +55,7 @@ public class RestaurantMenu implements java.io.Serializable{
 	}
 	
 
-	public List<Drink> get_drinks(){
+	/*public List<Drink> get_drinks(){
 		List <Drink> drinks = new ArrayList<>();
 		drinks = common.getdrinks();
 		for(int i=0; i<indvidual.getdrinks().size(); i++) {
@@ -80,6 +80,6 @@ public class RestaurantMenu implements java.io.Serializable{
 			Desserts.add(indvidual.getdesserts().get(i));
 		}
 		return Desserts;
-	}
+	}*/
 }
 

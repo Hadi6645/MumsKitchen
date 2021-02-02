@@ -8,6 +8,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+
+import clientServer.Server;
 import control.Cache;
 import entities.Dessert;
 import entities.Drink;
@@ -38,29 +42,12 @@ public class Show_Menu {
     private ListView<String> desserts_list; // Value injected by FXMLLoader
     private ObservableList<String> listViewData_desserts = FXCollections.observableArrayList();
     
+    protected static Session session;
     @FXML
     public void initialize() {
-    // String val = null;
     	Cache cache= Cache.getCache();
     	cache.requestMenu(cache.getRestId());
-    	//Restaurant restaurant ;
-    	//restaurant = PrimaryController.get_Restaurant();
-    	//restaurant = cache.getRestaurant();
-    	 //List<Restaurant> rests = cache.getCachedRestaurants();
-    	 //Menu restMenu;
     	 List<Food> foods = cache.getCachedFood();
-    	 //List<Meal> Meals = new ArrayList<Meal>();
-    	// System.out.println("hiiiiiiiiiiiiiiiiiiiiii");
-    	 //restaurant = rests.get(cache.getRestId());
-    	 //restMenu = cache.getCachedMenu();
-    	 
-    	 /*Meals = restMenu.getmeals();
-    
-    	 List<Drink> Drinks = new ArrayList<Drink>();
-    	 Drinks = restMenu.getdrinks();
-    	 
-    	 List<Dessert> Desserts = new ArrayList<Dessert>();
-    	 Desserts = restMenu.getdesserts();*/
     	 
     	 for(Food food : foods)
  		 {
@@ -71,19 +58,6 @@ public class Show_Menu {
     		 if(food.getClass() == Dessert.class)
     			 listViewData_desserts.add(food.getName());
  		 }
-    	
-    	 /*for(int i=0; i<Meals.size();i++) {
-       	   listViewData_meals.add(Meals.get(i).getName());
-          }
-    	 
-    	 for(int i=0; i<Drinks.size();i++) {
-         	   listViewData_drinks.add(Drinks.get(i).getName());
-            }
-    	 
-    	 for(int i=0; i<Desserts.size();i++) {
-       	   listViewData_desserts.add(Desserts.get(i).getName());
-          }*/
-    	 
     	 // Init meals_list.
     	 meals_list.setItems(listViewData_meals);
     	 meals_list.setCellFactory((list) -> {
