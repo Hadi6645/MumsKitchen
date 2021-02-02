@@ -20,27 +20,31 @@ public class FoodOrder {
 	
 	private Menu Order;
 	private float TotalPrice;
-	private Client Client;
+	private Customer Customer;
 	private float ShippingFee;
 	private Transaction Payment;
 	private LocalDateTime Time; 
 	private FoodOrder_Status Status;
 	
-	public FoodOrder(int id, Menu order, float totalPrice, Client client, float shippingFee, Transaction payment, LocalDateTime time, FoodOrder_Status status) {
+	public FoodOrder() {
+		super();
+	}
+	
+	public FoodOrder(int id, Menu order, float totalPrice, Customer Customer, float shippingFee, Transaction payment, LocalDateTime time, FoodOrder_Status status) {
 		this.id = id;
 		Order = order;
 		TotalPrice = totalPrice;
-		Client = client;
+		Customer = Customer;
 		ShippingFee = shippingFee;
 		Payment = payment;
 		Time = time; 
 		Status = status;
 	}
 	
-	public FoodOrder(Menu order, float totalPrice, Client client, float shippingFee, Transaction payment) {
+	public FoodOrder(Menu order, float totalPrice, Customer Customer, float shippingFee, Transaction payment) {
 		Order = order;
 		TotalPrice = totalPrice;
-		Client = client;
+		Customer = Customer;
 		ShippingFee = shippingFee;
 		Payment = payment;
 	}
@@ -54,8 +58,8 @@ public class FoodOrder {
 	public float getTotalPrice() {
 		return TotalPrice;
 	}
-	public Client getClient() {
-		return Client;
+	public Customer getClient() {
+		return Customer;
 	}
 	public float getShippingFee() {
 		return ShippingFee;

@@ -8,10 +8,19 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+
+import clientServer.Server;
+import control.Cache;
 import entities.Dessert;
 import entities.Drink;
+import entities.Employee;
+import entities.Food;
 import entities.Meal;
+import entities.Menu;
 import entities.Restaurant;
+import enums.EmployeeRole;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -33,34 +42,22 @@ public class Show_Menu {
     private ListView<String> desserts_list; // Value injected by FXMLLoader
     private ObservableList<String> listViewData_desserts = FXCollections.observableArrayList();
     
+    protected static Session session;
     @FXML
     public void initialize() {
-    // String val = null;
-    	Restaurant restaurant = new Restaurant();
-    	restaurant = PrimaryController.get_Restaurant();
-    	
-    	 List<Meal> Meals = new ArrayList<Meal>();
-    	// System.out.println("hiiiiiiiiiiiiiiiiiiiiii");
-    	 Meals = restaurant.getMenu().get_meals();
-    
-    	 List<Drink> Drinks = new ArrayList<Drink>();
-    	 Drinks = restaurant.getMenu().get_drinks();
+    	Cache cache= Cache.getCache();
+    	cache.requestMenu(cache.getRestId());
+    	 List<Food> foods = cache.getCachedFood();
     	 
-    	 List<Dessert> Desserts = new ArrayList<Dessert>();
-    	 Desserts = restaurant.getMenu().get_dessert();
-    	 
-    	 for(int i=0; i<Meals.size();i++) {
-       	   listViewData_meals.add(Meals.get(i).getName());
-          }
-    	 
-    	 for(int i=0; i<Drinks.size();i++) {
-         	   listViewData_drinks.add(Drinks.get(i).getName());
-            }
-    	 
-    	 for(int i=0; i<Desserts.size();i++) {
-       	   listViewData_desserts.add(Desserts.get(i).getName());
-          }
-    	 
+    	 for(Food food : foods)
+ 		 {
+    		 if(food.getClass() == Meal.class)
+    			 listViewData_meals.add(food.getName());
+    		 if(food.getClass() == Drink.class)
+    			 listViewData_drinks.add(food.getName());
+    		 if(food.getClass() == Dessert.class)
+    			 listViewData_desserts.add(food.getName());
+ 		 }
     	 // Init meals_list.
     	 meals_list.setItems(listViewData_meals);
     	 meals_list.setCellFactory((list) -> {

@@ -4,32 +4,30 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Table;
 
 import clientServer.ChatClientCLI;
 import clientServer.Server;
+import enums.Temperature;
 
 @Entity
 public class Drink extends Food{
 	boolean isSparkling;
 	double alcPercent;
-	enum temperature{
-		HOT,
-		COLD
+	@Enumerated(EnumType.STRING)
+	Temperature mytemp;
+	
+	public Drink() {
+		super();
 	}
-	temperature mytemp;
-	public temperature getTemperature()
-	{
-		return mytemp;
-	}
-	public void setTemperature(temperature Temperature )
-	{
-		 mytemp = Temperature;
-	}
-	public Drink(String name,String description,double price,boolean isSparkling,double alcPercent) {
+	 
+	public Drink(String name,String description,double price,boolean isSparkling,double alcPercent,Temperature temp) {
 		super(name,description,price);
 		this.isSparkling = isSparkling;
 		this.alcPercent = alcPercent;
+		this.mytemp = temp;
 	}
 	public double getalcPercent()
 	{
@@ -47,7 +45,7 @@ public class Drink extends Food{
 	{
 		alcPercent = percent;
 	}
-	@Override
+	/*@Override
 	public boolean update() throws Exception
 	{
 		super.update();
@@ -93,7 +91,7 @@ public class Drink extends Food{
 		if(isSparkling)
 			System.out.print("Sparkling\n");
 		System.out.print("The temperature is: ");
-		if(mytemp == temperature.HOT ) System.out.print("HOT");
+		if(mytemp == Temperature.HOT ) System.out.print("HOT");
 		else System.out.print("COLD");
 		if(alcPercent>0)
 		{
@@ -103,5 +101,5 @@ public class Drink extends Food{
 		}
 	
 		
-	}
+	}*/
 }

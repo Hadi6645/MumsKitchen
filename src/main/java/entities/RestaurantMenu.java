@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,19 +12,34 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
 
 
-public class RestaurantMenu {
+@Entity
+public class RestaurantMenu implements java.io.Serializable{
 
-	int id;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int id;
 	
 	//@Basic
 //	@Type( type = BaseMenuType.class )
+	@OneToOne
 	BaseMenu common;
+	@OneToOne
 	Menu indvidual;
+	
+	public RestaurantMenu() {
+		
+	}
 	
 	public RestaurantMenu(BaseMenu common,Menu ind) {
 		this.common = common;
@@ -39,7 +55,7 @@ public class RestaurantMenu {
 	}
 	
 
-	public List<Drink> get_drinks(){
+	/*public List<Drink> get_drinks(){
 		List <Drink> drinks = new ArrayList<>();
 		drinks = common.getdrinks();
 		for(int i=0; i<indvidual.getdrinks().size(); i++) {
@@ -64,6 +80,6 @@ public class RestaurantMenu {
 			Desserts.add(indvidual.getdesserts().get(i));
 		}
 		return Desserts;
-	}
+	}*/
 }
 

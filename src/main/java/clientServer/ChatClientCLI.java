@@ -7,22 +7,24 @@ import control.ServerInstruction;
 
 
 public class ChatClientCLI {
-	
 	private Client client;
 	private Thread requestThread;
-	private CompletableFuture<Object> completableFuture;
-
+	
 	public ChatClientCLI(Client client) {
 		this.client = client;
 	}
-
+	public ChatClientCLI() {
+	}
+	
 	public void sendInstructionToServer(ServerInstruction sInstruction, CompletableFuture<Object> completableFuture) throws IOException {
-		this.completableFuture = completableFuture;
 		if (sInstruction == null) {
 			System.out.print("cannot send request to server - sInstruction is null");
-			this.completableFuture.cancel(true); //send CancelException to waiting client
+			completableFuture.cancel(true); //send CancelException to waiting client
 			return;
 		}
+		Client client = new Client();
+		this.client = client;
+		client.setCompletableFuture(completableFuture);
 		requestThread = new Thread(new Runnable() {
 
 			public void run() {
@@ -34,7 +36,6 @@ public class ChatClientCLI {
 						return;
 					}
 					client.sendToServer(sInstruction);
-					client.closeConnection();
 				} catch (IOException e1) {
 					System.err.println("An error occured,cannot send reuqest to server.");
 					// TODO Auto-generated catch block
@@ -47,25 +48,20 @@ public class ChatClientCLI {
 					// TODO Auto-generated catch block
 					System.err.println("An error occured,cannot send reuqest to server.");
 					e.printStackTrace();
-				} finally {
-					try {
-						if(client.isConnected()) {
-							client.closeConnection();
-						}
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						System.err.println("cannot close connection.");
-						e.printStackTrace();
-					}
 				}
 			}
 		});
 		requestThread.start();
 	}
 	
-	public void handleMessageFromServer(Object msg) {
-		//write something
-		this.completableFuture.complete(msg); // send result to the waiting client
+	public void handleMessageFromServer(Object msg,CompletableFuture<Object> completableFuture) {
+		try {
+			completableFuture.complete(msg); // send result to the waiting client
+			client.closeConnection();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 }

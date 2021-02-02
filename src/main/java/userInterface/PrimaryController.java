@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import control.Authenticator;
+import control.Cache;
 import entities.Company;
 import entities.Restaurant;
 import javafx.collections.FXCollections;
@@ -33,11 +34,13 @@ public class PrimaryController {
     @FXML
     public void initialize() {
     // String val = null;
-     	Company company = new Company();
-         company = App.start_company();
+    	Cache cache = Cache.getCache();
+     	//Company company = new Company();
+         //company = App.start_company();
         //listView_2 = (ListView<Restaurant>) company.getRestaurants();
-         List<Restaurant> res = new ArrayList<Restaurant>();
-        res = company.getRestaurants();
+    	cache.requestRestaurants();
+         List<Restaurant> res = cache.getCachedRestaurants();
+        //res = company.getRestaurants();
         for(int i=0; i<res.size();i++) {
      	   listViewData1.add(res.get(i).getName());
         }
@@ -75,6 +78,8 @@ public class PrimaryController {
         for(int i=0; i<res.size();i++) {
     		if(res.get(i).getName() == val) {
     			My_res = res.get(i);
+    			cache.setRestId(My_res.getId());
+    			cache.setRestaurant(My_res);
     		}
     	}
         
@@ -91,7 +96,7 @@ public class PrimaryController {
      
      @FXML
      void goTologIn(ActionEvent event)  throws IOException{
-    	 App.setRoot("LogInController");
+    	 App.setRoot("logIn");
      }
 
 

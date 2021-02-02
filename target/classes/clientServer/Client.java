@@ -1,6 +1,7 @@
 package clientServer;
 
 import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
 
 import server.ocsf.client.AbstractClient;
@@ -9,33 +10,30 @@ public class Client extends AbstractClient {
 	private static final Logger LOGGER =
 			Logger.getLogger(Client.class.getName());
 	
-	private ChatClientCLI chatClientCLI;	
+	private ChatClientCLI chatClientCLI;
+	private CompletableFuture<Object> completableFuture;
 	public Client(String host, int port) {
 		super(host, port);
 		this.chatClientCLI = new ChatClientCLI(this);
 	}
-	
 	public Client() {
-		super("localhost", 3000);
+		super(userInterface.App.getHost(), userInterface.App.getPort());
 		this.chatClientCLI = new ChatClientCLI(this);
 	}
-	
+	public void setCompletableFuture(CompletableFuture<Object> completableFuture)
+	{
+		this.completableFuture=completableFuture;
+	}
 	@Override
 	protected void connectionEstablished() {
 		// TODO Auto-generated method stub
 		super.connectionEstablished();
 		LOGGER.info("Connected to server.");
-		
-//		try {
-//			chatClientCLI.loop();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
 	}
 
 	@Override
 	protected void handleMessageFromServer(Object msg) {
-		chatClientCLI.handleMessageFromServer(msg);
+		chatClientCLI.handleMessageFromServer(msg,completableFuture);
 	}
 	
 	@Override
@@ -58,19 +56,5 @@ public class Client extends AbstractClient {
 	}
 
 	public static void main(String[] args) throws IOException {
-		/*if (args.length != 2) {
-			System.out.println("Required arguments: <host> <port>");
-		} else {
-			String host = args[0];
-			int port = Integer.parseInt(args[1]);
-
-			SimpleChatClient chatClient = new SimpleChatClient(host, port);
-			chatClient.openConnection();
-		}*/
-		//String host = "localhost";
-		//int port = Integer.parseInt(args[1]);
-
-		Client kitchenClient = new Client();
-		System.out.println("Fetching Data, Please Wait.");
 	}
 }

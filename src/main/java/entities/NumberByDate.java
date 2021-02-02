@@ -7,6 +7,9 @@ public class NumberByDate {
 	private LocalDate Date;
 	private int Number;
 	
+	public NumberByDate() {
+		super();
+	}
 	public NumberByDate(LocalDate Date, int Number)
 	{
 		this.Date = Date;

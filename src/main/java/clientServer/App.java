@@ -1,33 +1,41 @@
 package clientServer;
 
-
-
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.sql.Statement;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.service.ServiceRegistry;
 
+import entities.Address;
 import entities.BaseMenu;
+import entities.Company;
 import entities.Dessert;
+import entities.DiningSpace;
+
 import entities.Drink;
 import entities.Employee;
 import entities.Food;
 import entities.Ingredients;
 import entities.Meal;
 import entities.Menu;
+import entities.OpeningHours;
+import entities.Restaurant;
 import entities.RestaurantMenu;
+import entities.table;
 import enums.EmployeeRole;
-
+import enums.Temperature;
+import enums.DiningType;
 
 public class App
 {
@@ -50,6 +58,7 @@ public class App
 		Ingredients flour = new Ingredients("flour");
 		Ingredients strawberry = new Ingredients("strawberry");
 		Ingredients chocolate = new Ingredients("chocolate");
+		Ingredients honey = new Ingredients("honey");
 		session.save(salt); //0
 		session.save(pepper); //1
 		session.save(meat); //2
@@ -64,6 +73,7 @@ public class App
 		session.save(flour); //11
 		session.save(strawberry); //12
 		session.save(chocolate); //13
+		session.save(honey); //14
 		session.flush();
 	}
 	private static List<Ingredients> getAllIngredients() throws Exception
@@ -111,7 +121,7 @@ public class App
 		
 		session.save(burger); //0
 		session.save(steak); //1
-		//session.flush();
+		session.flush();
 	}
 	
 	private static List<Meal> getAllMeals() throws Exception
@@ -127,14 +137,14 @@ public class App
 	public static void generateDrinks() throws Exception
 	{
 		session = Server.getSession();
-		Drink cocacola = new Drink("CocaCola","330ml Sparkling Cola drink in a can",8.50,true,0);
-		Drink appleJuice = new Drink("Apple Juice","Pregat apple juice 500ml in a bottle",8,false,0);
-		Drink carlsberg = new Drink("Carlsberg beer","330ml glass carlsberg beer bottle",25,false,5);
+		Drink cocacola = new Drink("CocaCola","330ml Sparkling Cola drink in a can",8.50,true,0,Temperature.COLD);
+		Drink appleJuice = new Drink("Apple Juice","Pregat apple juice 500ml in a bottle",8,false,0,Temperature.COLD);
+		Drink carlsberg = new Drink("Carlsberg beer","330ml glass carlsberg beer bottle",25,false,5,Temperature.COLD);
 		
 		session.save(cocacola); //0
 		session.save(appleJuice); //1
 		session.save(carlsberg); //2
-		//session.flush();
+		session.flush();
 	}
 	
 	private static List<Drink> getAllDrinks() throws Exception
@@ -178,7 +188,7 @@ public class App
 
 		session.save(cheesecake); //0
 		session.save(chocolatecake); //1
-		//session.flush();
+		session.flush();
 	}
 	
 	private static List<Dessert> getAllDesserts() throws Exception
@@ -191,29 +201,39 @@ public class App
 		return data;
 	}
 	
-	private static BaseMenu generateBaseMenu() throws Exception
+	static void generateBaseMenu() throws Exception //change the constructor dont forget!
 	{
-		List<Meal> meals = getAllMeals();
-		List<Drink> drinks = getAllDrinks();
-		List<Dessert> desserts = getAllDesserts();
-		
-		List<Meal> baseMeals = new ArrayList<Meal>();
-		baseMeals.add(meals.get(0));
-		
-		List<Drink> baseDrinks = new ArrayList<Drink>();
-		baseDrinks.add(drinks.get(0));
-		baseDrinks.add(drinks.get(1));
-		
-		List<Dessert> baseDesserts = new ArrayList<Dessert>();
-		baseDesserts.add(desserts.get(1));
-		
-		BaseMenu common = new BaseMenu(baseMeals,baseDrinks,baseDesserts);
-		
-		return common;
+		session = Server.getSession();
+		List<Food> food =getAllFood();
+		BaseMenu common = new BaseMenu();
+		session.save(common);
+		common.setallfood(food);
+		session.save(common);
+		for(Food foodd: food)
+		{
+			session.save(foodd);
+		}
+		session.flush();
 	}
 	
-	private static RestaurantMenu generateResturantMenu() throws Exception
+	static Menu getBaseMenu()
 	{
+		List<Menu> allmenus = getAllMenus();
+		Menu menureturn = null;
+		for(Menu menu : allmenus)
+		{
+			if(menu.getClass() == BaseMenu.class)
+			{
+    			 menureturn = menu;
+    			 break;
+			}
+		}
+		return menureturn;
+	}
+	
+	static void generateResturantMenu() throws Exception
+	{
+		session = Server.getSession();
 		List<Meal> meals = getAllMeals();
 		List<Drink> drinks = getAllDrinks();
 		List<Dessert> desserts = getAllDesserts();
@@ -227,15 +247,46 @@ public class App
 		List<Dessert> resDesserts = new ArrayList<Dessert>();
 		resDesserts.add(desserts.get(0));
 		
-		Menu menu = new Menu(resMeals,resDrinks,resDesserts);
-		BaseMenu common = generateBaseMenu();
-		
-		RestaurantMenu resMenu = new RestaurantMenu(common,menu);
-		
-		
-		return resMenu;
+		//Menu menu = new Menu(getAllMeals(),getAllDrinks(),getAllDesserts());
+		//BaseMenu common = getBaseMenu();
+		//session.save(menu);
+		//RestaurantMenu resMenu = new RestaurantMenu(common,menu);
+		//session.save(resMenu);
 	}
-	private static List<Food> getAllFood() throws Exception
+	private static RestaurantMenu getRestaurantMenu() throws Exception
+	{
+		session = Server.getSession();
+		CriteriaBuilder builder= session.getCriteriaBuilder();
+		CriteriaQuery<RestaurantMenu> query= builder.createQuery(RestaurantMenu.class);
+		query.from(RestaurantMenu.class);
+		RestaurantMenu data= session.createQuery(query).uniqueResult();
+		return data;
+	}
+	static List<Menu> getAllMenus()
+	{
+		session = Server.getSession();
+		CriteriaBuilder builder= session.getCriteriaBuilder();
+		CriteriaQuery<Menu> query= builder.createQuery(Menu.class);
+		query.from(Menu.class);
+		List<Menu> data= session.createQuery(query).getResultList();
+		return data;
+	}
+	static List<Food> getRestaurantFood(int id)
+	{
+		List<Restaurant> rests = getAllRestaurants();
+		Restaurant rest = rests.get(id);
+		List<Menu> allmenus = getAllMenus();
+		int temp = allmenus.indexOf(rest.getMenu());
+		Menu menu = allmenus.get(temp);
+		List<Food> result =  menu.getallfood();
+		for(Food food : result)
+		{
+			//System.out.print(food.getName());
+			System.out.print("");
+		}
+		return result;
+	}
+	static List<Food> getAllFood()
 	{
 		session = Server.getSession();
 		CriteriaBuilder builder= session.getCriteriaBuilder();
@@ -244,6 +295,76 @@ public class App
 		List<Food> data= session.createQuery(query).getResultList();
 		return data;
 	}
+	
+	public static void generateTables()
+	{
+		session = Server.getSession();
+		table table2 = new table(2);
+		table table3 = new table(3);
+		table table4 = new table(4);
+		session.save(table2); //1
+		session.save(table3); //2
+		session.save(table4); //3
+		session.flush();
+	}
+	
+	static List<table> getAllTables()
+	{
+		session = Server.getSession();
+		CriteriaBuilder builder= session.getCriteriaBuilder();
+		CriteriaQuery<table> query= builder.createQuery(table.class);
+		query.from(table.class);
+		List<table> data= session.createQuery(query).getResultList();
+		return data;
+	}
+
+	public static void generateDiningspace()
+	{
+		session = Server.getSession();
+		 DiningType inside =  DiningType.INSIDE;
+		 DiningType outside =  DiningType.OUTSIDE;
+	     List<table> tables = getAllTables();
+		 DiningSpace insideRes =  new DiningSpace(inside, false); 
+		 DiningSpace outsideRes =  new DiningSpace(outside, true);
+		 
+		 insideRes.addTable(tables.get(1));
+		 insideRes.addTable(tables.get(1));
+		 insideRes.addTable(tables.get(1));
+		 insideRes.addTable(tables.get(2));
+		 insideRes.addTable(tables.get(2));
+		 insideRes.addTable(tables.get(2));
+		 insideRes.addTable(tables.get(2));
+		 insideRes.addTable(tables.get(3));
+		 insideRes.addTable(tables.get(3));
+		 insideRes.addTable(tables.get(3));
+		 insideRes.addTable(tables.get(3));
+		 insideRes.addTable(tables.get(3));
+		 
+		 outsideRes.addTable(tables.get(1));
+		 outsideRes.addTable(tables.get(1));
+		 outsideRes.addTable(tables.get(2)); 
+		 outsideRes.addTable(tables.get(2));
+		 outsideRes.addTable(tables.get(3));
+		 outsideRes.addTable(tables.get(3));
+		 outsideRes.addTable(tables.get(3));
+		 session.save(insideRes);
+		 session.save(outsideRes);
+		 session.flush();
+		
+	}
+	
+	static List<DiningSpace> getAllDiningSpace()
+	{
+		session = Server.getSession();
+		CriteriaBuilder builder= session.getCriteriaBuilder();
+		CriteriaQuery<DiningSpace> query= builder.createQuery(DiningSpace.class);
+		query.from(DiningSpace.class);
+		List<DiningSpace> data =  session.createQuery(query).getResultList();
+		return data;
+	}
+	
+	
+	
 	public static Food getMeal(int foodID) throws Exception
 	{
 		Food wantedMeal;
@@ -251,10 +372,10 @@ public class App
 		wantedMeal = allfood.get(foodID);
 		return wantedMeal;
 	}
-	public static void printmealbyiD(int foodID) throws Exception
+	/*public static void printmealbyiD(int foodID) throws Exception
 	{
 		getMeal(foodID).print();
-	}
+	}*/
 	public static void printIngredients() throws Exception
 	{
 		List<Ingredients> ingr = getAllIngredients();
@@ -263,7 +384,7 @@ public class App
 			ingredient.print();
 		}
 	}
-	public static void viewMenu() throws Exception
+	/*public static void viewMenu() throws Exception
 	{
 		RestaurantMenu resMenu = generateResturantMenu();
 		BaseMenu base = resMenu.getcommon();
@@ -304,16 +425,172 @@ public class App
 			dessert.print();
 		}
 		//session.flush();
-	}
+	}*/
 	public static void generateEmployees() throws Exception
 	{
 		session = Server.getSession();
-		Employee ceo = new Employee("123456789","1234","Lia","Komo",EmployeeRole.CEO);
-		Employee dietition = new Employee("987654321","1234","Mat","Blob",EmployeeRole.DIETITION);
+		String CEO_id = "123456789";
+    	String CEO_password = "smellycat";
+    	String CEO_firstName = "Phoebe";
+    	String CEO_lastName = "Buffay";
+    	EmployeeRole CEO_role = EmployeeRole.CEO;
+    	Employee CEOO = new Employee(CEO_id, CEO_password, CEO_firstName, CEO_lastName, CEO_role);
+    	
+    	String Dietitian_id = "987654321";
+    	String Dietitian_password = "iknow";
+    	String Dietitian_firstName = "Monica";
+    	String Dietitian_lastName = "Geller";
+    	EmployeeRole Dietitian_role = EmployeeRole.DIETITION;
+    	Employee Dietitian = new Employee(Dietitian_id, Dietitian_password, Dietitian_firstName, Dietitian_lastName, Dietitian_role);
+		
+		
+		Employee ceo = new Employee("12345678","1234","Lia","Komo",EmployeeRole.CEO);
+		Employee dietition = new Employee("98765432","1234","Mat","Blob",EmployeeRole.DIETITION);
 		Employee manager = new Employee("012345678","1234","Karmen","Jungle",EmployeeRole.MANAGER);
-		session.save(ceo); //0
-		session.save(dietition); //1
+		//session.save(ceo); //0
+		//session.save(dietition); //1
+		
+		session.save(CEOO); //0
+		session.save(Dietitian); //1
 		session.save(manager); //2
 		session.flush();
 	}
+	
+	private static List<Employee> getEmployees() throws Exception
+	{
+		session = Server.getSession();
+		CriteriaBuilder builder= session.getCriteriaBuilder();
+		CriteriaQuery<Employee> query= builder.createQuery(Employee.class);
+		query.from(Employee.class);
+		List<Employee> data= session.createQuery(query).getResultList();
+		return data;
+	}
+	
+	public static Employee getEmployeeByID(String employeeID) throws Exception
+	{
+		Employee wantedEmployee = null;
+		List<Employee> allEmployees = getEmployees();
+		
+		for(Employee employee : allEmployees)
+		{
+			if(employee.getId().equals(employeeID))
+			{
+				wantedEmployee = employee;
+				break;
+			}
+		}
+		return wantedEmployee;
+	}
+	
+	private static Employee getCEO() throws Exception
+	{
+		Employee wantedEmployee = null;
+		List<Employee> allEmployees = getEmployees();
+		
+		for(Employee employee : allEmployees)
+		{
+			if(employee.getRole() == EmployeeRole.CEO)
+			{
+				wantedEmployee = employee;
+				break;
+			}
+		}
+		return wantedEmployee;
+	}
+	
+	private static Employee getDietition() throws Exception
+	{
+		Employee wantedEmployee = null;
+		List<Employee> allEmployees = getEmployees();
+		
+		for(Employee employee : allEmployees)
+		{
+			if(employee.getRole() == EmployeeRole.DIETITION)
+			{
+				wantedEmployee = employee;
+				break;
+			}
+		}
+		return wantedEmployee;
+	}
+	
+	public static void generateCompany() throws Exception
+	{
+		session = Server.getSession();
+		Employee ceo = getCEO();
+		Employee dietition = getDietition();
+		
+		Company Company = new Company(ceo, dietition);
+		
+		session.save(Company);
+	}
+	
+	private static Company getCompany() throws Exception
+	{
+		session = Server.getSession();
+		CriteriaBuilder builder= session.getCriteriaBuilder();
+		CriteriaQuery<Company> query= builder.createQuery(Company.class);
+		query.from(Company.class);
+		Company data= session.createQuery(query).uniqueResult();
+		return data;
+	}
+	
+	public static void generateRestaurants() throws Exception
+	{
+		session = Server.getSession();
+		String Name = "Haifa Branch";
+    	Address Address = new Address("Haifa", "Yefe Nof", 42 );
+    	String Telephone = "036427130";
+    	List<Employee> Staff = new ArrayList<>(); 
+    	OpeningHours Hours = new OpeningHours();
+    	//Hours.setOpeningHours(int day, LocalTime open, LocalTime close);
+    	//List<DiningSpace> Spaces = new ArrayList<>();
+    	List<DiningSpace> Spaces = getAllDiningSpace();
+    	
+    	
+    	Menu resMenu = getBaseMenu();
+    	session.save(Address);
+    	session.save(Hours);
+    	session.flush();
+    	Restaurant res1 = new Restaurant(Name,Address,Telephone,Staff,Hours,Spaces,resMenu);
+    	
+    	
+    	String Name2 = "Tel Aviv Branch";
+    	Address Address2 = new Address("Tel Aviv", "Exhibition Gardens", 11 );
+    	String Telephone2 = "036427080";
+    	List<Employee> Staff2 = new ArrayList<>(); 
+    	OpeningHours Hours2 = new OpeningHours();
+    	//Hours.setOpeningHours(int day, LocalTime open, LocalTime close);
+    	//List<DiningSpace> Spaces2 = new ArrayList<>();
+    	List<DiningSpace> Spaces2 = getAllDiningSpace();
+    	session.save(Address2);
+    	session.save(Hours2);
+    	//RestaurantMenu resMenu2 = generateResturantMenu();
+    	
+    	Restaurant res2 = new Restaurant(Name2,Address2,Telephone2,Staff2,Hours2,Spaces2,resMenu);
+    	
+    	session.save(res1);
+    	session.save(res2);
+    	session.flush();
+    	
+    	Company mainCompany = getCompany();
+    	
+    	mainCompany.AddRestaurant(res1);
+    	mainCompany.AddRestaurant(res2);
+    	
+    	session.save(mainCompany);
+    	session.flush();
+	}
+	
+	public static List<Restaurant> getAllRestaurants()
+	{
+		session = Server.getSession();
+		CriteriaBuilder builder= session.getCriteriaBuilder();
+		CriteriaQuery<Restaurant> query= builder.createQuery(Restaurant.class);
+		query.from(Restaurant.class);
+		List<Restaurant> data= session.createQuery(query).getResultList();
+		return data;
+	}
+	
+	
 }

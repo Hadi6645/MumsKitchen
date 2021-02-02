@@ -1,34 +1,50 @@
 package entities;
 
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import java.io.Serializable;
 import java.util.List;
 
 
 
 @Entity
 @Table(name = "restaurant")
-public class Restaurant {
+public class Restaurant implements java.io.Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	private String Name;
+	@OneToOne
 	private Address Address ;
 	private String Telephone;
+	@Column
+    @ElementCollection(targetClass=Employee.class)
 	private List<Employee> Staff;
+	@OneToOne
 	private OpeningHours Hours;
+	@Column
+    @ElementCollection(targetClass=DiningSpace.class)
 	private List<DiningSpace> Spaces;
-	private RestaurantMenu Menu;
+	@OneToOne
+	private Menu Menu;
 	
 	
 	public Restaurant() {
 		
 	}
 	
-	public Restaurant(int id, String Name, Address Address, String Telephone, List<Employee> Staff, OpeningHours Hours, List<DiningSpace> Spaces, RestaurantMenu Menu)
+	public Restaurant(int id, String Name, Address Address, String Telephone, List<Employee> Staff, OpeningHours Hours, List<DiningSpace> Spaces, Menu Menu)
 	{
 		this.id =  id;
 	    this.Name = Name;
@@ -40,7 +56,7 @@ public class Restaurant {
 	    this.Menu = Menu;
 	}
 	
-	public Restaurant(String Name, Address Address, String Telephone, List<Employee> Staff, OpeningHours Hours, List<DiningSpace> Spaces, RestaurantMenu Menu)
+	public Restaurant(String Name, Address Address, String Telephone, List<Employee> Staff, OpeningHours Hours, List<DiningSpace> Spaces, Menu Menu)
 	{
 	    this.Name = Name;
 		this.Address = Address ;
@@ -82,17 +98,21 @@ public class Restaurant {
 		return Spaces;
 	}
 	
-	public RestaurantMenu getMenu()
+	public Menu getMenu()
 	{
 		return Menu;
 	}
-	 public void addEmployee(Employee employee)
-	 {
-		 Staff.add(employee);
-	 }
-	 
-	 public int getId()
-	 {
-		 return id;
-	 }
+	public int getMenuId()
+	{
+		return Menu.getMenu_id();
+	}
+	public void addEmployee(Employee employee)
+	{
+		Staff.add(employee);
+	}
+	
+	public int getId()
+	{
+		return id;
+	}
 }

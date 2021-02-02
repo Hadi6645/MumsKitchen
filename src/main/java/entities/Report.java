@@ -36,6 +36,10 @@ public class Report {
 	this.Numbers = Numbers;
 	}
 	
+	public Report() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public int getRestaurant()
 	{
 		return RestaurantId;

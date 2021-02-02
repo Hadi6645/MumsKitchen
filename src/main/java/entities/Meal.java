@@ -10,6 +10,8 @@ import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -20,38 +22,51 @@ import clientServer.Server;
 
 @Entity
 public class Meal extends Food{
-	@Column
-    @ElementCollection(targetClass=Ingredients.class)
-	//@OneToMany(cascade = CascadeType.ALL)
-	List<Ingredients>  ingredient; //basic
-	@Column
-    @ElementCollection(targetClass=Ingredients.class)
-	//@OneToMany(cascade = CascadeType.ALL)
-	List<Ingredients>  ingredients; //optional
+
+	@ManyToMany(
+			cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+			targetEntity = Ingredients.class)
+	@JoinTable(
+		name="food_ingredients",
+		joinColumns = @JoinColumn(name = "food_id"),
+		inverseJoinColumns = @JoinColumn(name = "ingredients"))
+	List<Ingredients>  baseIngredients; //basic
+	
+	@ManyToMany(
+			cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+			targetEntity = Ingredients.class)
+	@JoinTable(
+			name="food_ingredients",
+			joinColumns = @JoinColumn(name = "food_id"),
+			inverseJoinColumns = @JoinColumn(name = "ingredients"))
+	List<Ingredients>  optinalIngredients; //optional
 
 public Meal(String name, String description,double price,List<Ingredients>  ingredient,List<Ingredients>  ingredients)
 {
 	super(name,description,price);
-	this.ingredient = ingredient;
-	this.ingredients = ingredients;
+	this.baseIngredients = ingredient;
+	this.optinalIngredients = ingredients;
+}
+public Meal() {
+	super();
 }
 public void setNewIng(List<Ingredients> newIng)
 {
-	ingredient=newIng;
+	baseIngredients=newIng;
 }
 public void setNewOpIng(List<Ingredients> newopIng)
 {
-	ingredients=newopIng;
+	optinalIngredients=newopIng;
 }
 public List<Ingredients> getBaseIng()
 {
-	return ingredient;
+	return baseIngredients;
 }
 public List<Ingredients> getOptIng()
 {
-	return ingredients;
+	return optinalIngredients;
 }
-@Override
+/*@Override
 public boolean update() throws Exception
 {
 	super.update();
@@ -171,6 +186,6 @@ public void print()
 		System.out.print(ingredient.getName()+"	");
 	}
 	System.out.print("\n");
-}
+}*/
 
 }

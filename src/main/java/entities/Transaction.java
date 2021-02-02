@@ -23,6 +23,10 @@ public class Transaction {
 	private int ClientId;
 	private int CreditCardId;
 	
+	public Transaction() {
+		super();
+	}
+	
 	public Transaction(int id,float amount, LocalDateTime time, int ClientId, int CreditCardId)
 	{
 		this.id  = id;

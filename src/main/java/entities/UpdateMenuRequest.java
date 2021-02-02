@@ -19,6 +19,10 @@ public class UpdateMenuRequest {
 	private Menu NewMenu;
 	private UpdateMenuRequest_Status Status;
 	
+	public UpdateMenuRequest() {
+		super();
+	}
+	
 	public UpdateMenuRequest(Menu newMenu, UpdateMenuRequest_Status status) {
 		NewMenu = newMenu;
 		Status = status;
