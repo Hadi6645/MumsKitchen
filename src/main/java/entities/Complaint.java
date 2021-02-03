@@ -1,5 +1,6 @@
 package entities;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -43,6 +44,31 @@ public class Complaint {
 		this.Status = Status;
 	}
 	
+	
+	@SuppressWarnings("null")
+	public List<String> getAllComplaintType()
+	{
+		List<String> enumlist = null;
+		 enumlist.add(Type.DELIVERY_NOT_RECIEVED.toString());
+		 enumlist.add(Type.DELAY_IN_DELIVERY.toString());
+		 enumlist.add(Type.FOOD_ORDER_NOT_CORRECT.toString());
+		 enumlist.add(Type.PAYMENT_FEE_NOT_CORRECT.toString());
+		 return enumlist;
+	}
+	
+	public ComplaintType getType() {
+		return Type;
+	}
+	public void setType(ComplaintType type) {
+		Type = type;
+	}
+	public void setDescription(String description) {
+		Description = description;
+	}
+	public String getDescription()
+	{
+		return Description;
+	}
 	public void addFoodOrderId(int id)
 	{
 		FoodOrderId = id;
@@ -83,10 +109,7 @@ public class Complaint {
 		return Restaurant;
 	}
 	
-	public String getDescription()
-	{
-		return Description;
-	}
+	
 	
 	public LocalDateTime getTime()
 	{

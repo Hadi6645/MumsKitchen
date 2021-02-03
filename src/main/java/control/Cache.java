@@ -2,6 +2,7 @@ package control;
 
 import java.util.List;
 
+import entities.Complaint;
 import entities.Dessert;
 import entities.DiningSpace;
 import entities.Drink;
@@ -46,6 +47,7 @@ public class Cache {
 	}
 	Restaurant restaurant;
 	Reservation reservation;
+	Complaint complaint;
 	
 	public FoodOrder getFoodorder() {
 		return foodorder;
@@ -137,5 +139,13 @@ public class Cache {
 	}
 	public void setCachedDining(DiningSpace cachedDining) {
 		this.cachedDining = cachedDining;
+	}
+	
+	
+	public Complaint getComplaint() {
+		return complaint;
+	}
+	public void setComplaint(Complaint complaint) {
+		this.complaint = complaint;
 	}
 }
