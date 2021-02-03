@@ -36,6 +36,7 @@ import enums.EmployeeRole;
 import enums.FoodOrder_Status;
 import enums.Status;
 import enums.UpdateMenuRequest_Status;
+import enums.UpdateMenuRequest_Type;
 import server.ocsf.server.AbstractServer;
 import server.ocsf.server.ConnectionToClient;
 
@@ -318,11 +319,11 @@ public class Server extends AbstractServer {
 		Employee emp = (Employee) criteria.add(Restrictions.eq("id", info[0])).uniqueResult();
 
 		//Employee emp =  (Employee)session.get(Employee.class, info[0]);
-		if(emp == null || !emp.getPassword().equals(info[1]) || emp.getIsLoggedIn()) { // if not found or wrong password
+		if(emp == null || !emp.getPassword().equals(info[1]) || emp.isLoggedIn()) { // if not found or wrong password
 			return false;
 		}
 		// update the employee login status
-		emp.setIsLoggedIn(true);
+		emp.setLoggedIn(true);
 		this.addToDatabase(emp);
 		//return true
 		return true;
@@ -359,12 +360,17 @@ public class Server extends AbstractServer {
 		}
 		Customer customer = order.getClient();
 		customer.setId(this.addToDatabase(customer));
-		Menu menu = order.getOrder();
-		menu.setId(this.addNewMenu(menu));
+		this.updateInDatabase(customer);
+		List<Food> items = order.getOrder();
+		for(Food food :items)
+		{
+			addToDatabase(food);
+		}
 		Transaction transaction = order.getPayment();
 		transaction.setId(this.addToDatabase(transaction));
-		FoodOrder toSave = new FoodOrder(menu,order.getTotalPrice(),customer,order.getShippingFee(),transaction);
-		toSave.setAllRelations(customer,menu,transaction);
+		this.updateInDatabase(transaction);
+		FoodOrder toSave = new FoodOrder(items,order.getTotalPrice(),customer,order.getShippingFee(),transaction);
+		toSave.setAllRelations(customer,transaction);
 		return this.addToDatabase(toSave);
 	}
 	
@@ -450,6 +456,24 @@ public class Server extends AbstractServer {
 		return data;
 	}
 	
+	private List<FoodOrder> getFoodOrders()
+	{
+		CriteriaBuilder builder= session.getCriteriaBuilder();
+		CriteriaQuery<FoodOrder> query= builder.createQuery(FoodOrder.class);
+		query.from(FoodOrder.class);
+		List<FoodOrder> data= session.createQuery(query).getResultList();
+		return data;
+	}
+	
+	private List<Reservation> getReservations()
+	{
+		CriteriaBuilder builder= session.getCriteriaBuilder();
+		CriteriaQuery<Reservation> query= builder.createQuery(Reservation.class);
+		query.from(Reservation.class);
+		List<Reservation> data= session.createQuery(query).getResultList();
+		return data;
+	}
+	
 	private List<Complaint> getActiveComplaints()
 	{
 		return this.getComplaints().stream().filter(comps -> comps.getComplaintStatus() == ComplaintStatus.ACTIVE).collect(Collectors.toList());
@@ -496,12 +520,7 @@ public class Server extends AbstractServer {
 		if(request == null) {
 			return false;
 		}
-		Menu menu = request.getMenu();
-		menu.setId(this.addNewMenu(menu));
-		UpdateMenuRequest toSave = new UpdateMenuRequest(menu,request.getStatus());
-		toSave.setAllRelations(menu);
-		int rId = this.addToDatabase(toSave);
-		return rId > 0;
+		return this.addToDatabase(request) > 0;
 	}
 	
 	private boolean updateUpdateMenuRequest(Object data)
@@ -512,10 +531,19 @@ public class Server extends AbstractServer {
 			return false;
 		}
 		if(request.getStatus()==UpdateMenuRequest_Status.APPROVED) {
-			// update menu
-			//get menu by id -> change the meals / drinks /....
-			// set everything 
-			//addToDatabse
+			UpdateMenuRequest_Type type = request.getType();
+			Food food = request.getFood();
+			Restaurant rest = this.getRestaurant(request.getRestaurantId());
+			switch(type) {
+				case ADD_NEW: 
+					break;
+				case UPDATE:
+					break;
+				case DELETE:
+					break;
+				default:
+					break;
+			}
 		}
 		updateInDatabase(request);
 		return true;
@@ -527,9 +555,9 @@ public class Server extends AbstractServer {
 		if(employee == null) {
 			return false;
 		}
-		employee.setIsLoggedIn(false);
+		employee.setLoggedIn(false);
 		int empId = this.updateInDatabase(employee); //update
-		return empId == employee.getId();
+		return empId == employee.getEmployeeNum();
 	}
 	
 	private List<NumberByDate> sortNumbersByDate(List<NumberByDate> numbers)
@@ -747,10 +775,44 @@ public class Server extends AbstractServer {
 		return null;
 	}
 	
+	private void updateAllReservations(boolean canReserve)
+	{
+		Status status = canReserve ? Status.WAITING : Status.DENIED;	
+		LocalDateTime begin =LocalDateTime.now();
+		LocalDateTime end = begin.plusDays(15).minusSeconds(1);
+		List<Reservation> resvs = this.getReservations().stream().filter(order -> order.getTime().isAfter(begin) && order.getTime().isBefore(end))
+				.collect(Collectors.toList());
+		resvs.forEach(resv -> {
+			resv.setStatus(status);
+			this.updateInDatabase(resv);
+		});
+	}
+	
+	private void updateAllFoodOrder(boolean canOrder)
+	{
+		FoodOrder_Status status = canOrder ? FoodOrder_Status.PREPARING : FoodOrder_Status.DENIED;
+		LocalDateTime begin =LocalDateTime.now();
+		LocalDateTime end = begin.plusDays(15).minusSeconds(1);
+		List<FoodOrder> orders = this.getFoodOrders().stream().filter(order -> order.getTime().isAfter(begin) && order.getTime().isBefore(end))
+				.collect(Collectors.toList());
+		orders.forEach(order -> {
+			order.setStatus(status);
+			this.updateInDatabase(order);
+		});
+	}
+	
 	private boolean updateTavSagol(Object data) /////// continue
 	{
 		//TODO continue
+		TavSagol tav = (TavSagol)data;
+		if(tav == null) {
+			return false; // change this
+		}
+		updateAllReservations(tav.isCanOpen());
+		updateAllFoodOrder(tav.isCanSendDelivries());
+		this.addToDatabase(tav);
 		return false;
+		
 	}
 	
 	private List<Restaurant> getRestaurauntsFromDB()

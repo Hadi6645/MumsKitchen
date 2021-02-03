@@ -4,5 +4,6 @@ public enum FoodOrder_Status {
 	PREPARING,
 	SHIPPED,
 	RECIEVED,
-	CANCELED
+	CANCELED,
+	DENIED
 }
