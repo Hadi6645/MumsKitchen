@@ -33,6 +33,7 @@ public class PrimaryController {
     private static String val;
     @FXML
     public void initialize() {
+    
     // String val = null;
     	Cache cache = Cache.getCache();
      	//Company company = new Company();

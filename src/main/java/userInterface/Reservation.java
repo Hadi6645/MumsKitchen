@@ -107,7 +107,7 @@ public class Reservation {
     //	Cache cache = Cache.getCache();
     	Restaurant res = cache.getRestaurant();
     	LocalTime[][] opening = res.getOpeningHours().getOpeningHours();
-    	System.out.println("hallllooooooossssss");
+    
     	LocalDate day = choosen_date.getValue();
     	daynum = day.getDayOfWeek().getValue();
     	/*DateTimeFormatter format = DateTimeFormatter.ofPattern("EEEE", Locale.getDefault());

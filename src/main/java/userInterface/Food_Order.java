@@ -124,7 +124,7 @@ public class Food_Order {
              System.out.println("ListView Selection Changed (selected: " + newValue + ")");
             try {
             	cache.setCurrent_drink(newValue);
-            	App.setRoot("DrinkInfo");
+            	App.setRoot("DrinkInfo");////////////////////////////////////////////////////////////
   		} catch (IOException e) {
   			// TODO Auto-generated catch block
   			e.printStackTrace();
@@ -136,7 +136,7 @@ public class Food_Order {
              System.out.println("ListView Selection Changed (selected: " + newValue + ")");
             try {
             	cache.setCurrent_dessert(newValue);
-            	App.setRoot("DessertInfo");
+            	App.setRoot("DessertInfo");////////////////////////////////////////////////////////////
   		} catch (IOException e) {
   			// TODO Auto-generated catch block
   			e.printStackTrace();
