@@ -34,7 +34,7 @@ public class Cancelation {
     	DataService dat = DataService.getDataService();
     			;
     	if(isfoodordercancel ) {
-    		dat.CancelFoodOrder(Integer.parseInt(cancel_id));
+    		dat.CancelFoodOrder(1);
     	}
     	else {
     		
