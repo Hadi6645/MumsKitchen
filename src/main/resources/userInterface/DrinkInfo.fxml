@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1">
-	<!-- TODO Add Nodes -->
-</AnchorPane>
 
+<AnchorPane prefHeight="500.0" prefWidth="500.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.1" fx:controller="userInterface.DrinkInfo">
+   <children>
+      <TextArea fx:id="descriptiontext" layoutX="50.0" layoutY="50.0" prefHeight="200.0" prefWidth="381.0" />
+      <Button layoutX="129.0" layoutY="339.0" mnemonicParsing="false" onAction="#return_func" prefHeight="25.0" prefWidth="223.0" text="Return" />
+   </children>
+</AnchorPane>
