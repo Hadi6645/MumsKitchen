@@ -121,11 +121,13 @@ public class Reservation {
     	else if(dayName == "Friday") daynum = 6;
     	else if(dayName == "Saturday") daynum = 7;*/
     	
-    	openhour = opening[daynum][0];
-    	closehour = opening[daynum][1];
+    	//openhour = opening[daynum][0];
+    	//closehour = opening[daynum][1];
+    	openhour = LocalTime.now().minusHours(4).withMinute(0);
+    	closehour = LocalTime.now().plusHours(4).withMinute(0);
     	newhour = openhour.plusMinutes(15);
     	
-    	while (newhour != closehour.minusHours(1).plusMinutes(15)) {
+    	while (newhour.isBefore(closehour.minusHours(1)) ) {
     		listViewData1.add(newhour);
     		newhour = newhour.plusMinutes(15);
     	}
@@ -154,15 +156,17 @@ public class Reservation {
         	//val = newValue;
             System.out.println("ListView Selection Changed (selected: " + newValue.toString() + ")");
            choosen_time = newValue;
+           
+           localdatetime = LocalDateTime.now().withDayOfMonth(day.getDayOfMonth());
+       	localdatetime = localdatetime.withMonth(day.getMonthValue());
+       	localdatetime = localdatetime.withYear(day.getYear());
+       	localdatetime = localdatetime.withHour(choosen_time.getHour());
+       	localdatetime = localdatetime.withMinute(choosen_time.getMinute());
+       	localdatetime = localdatetime.withSecond(choosen_time.getSecond());
         });
         
     	//localdatetime = new LocalDateTime(day, choosen_time);
-    	localdatetime = localdatetime.withDayOfMonth(day.getDayOfMonth());
-    	localdatetime = localdatetime.withMonth(day.getMonthValue());
-    	localdatetime = localdatetime.withYear(day.getYear());
-    	localdatetime = localdatetime.withHour(choosen_time.getHour());
-    	localdatetime = localdatetime.withMinute(choosen_time.getMinute());
-    	localdatetime = localdatetime.withSecond(choosen_time.getSecond());
+    	
     }
 
 }

@@ -33,7 +33,8 @@ public class ChangeReservationHour {
     
     @FXML
     public void initialize() {
-    	
+        cache = Cache.getCache();
+        reservation = cache.getReservation();
     	Restaurant res = cache.getRestaurant();
     	LocalTime[][] opening = res.getOpeningHours().getOpeningHours();
     	int daynum = reservation.getTime().getDayOfWeek().getValue();

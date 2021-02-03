@@ -18,7 +18,12 @@ import enums.Status;
 
 @Entity
 @Table(name = "reservation")
-public class Reservation {
+public class Reservation implements java.io.Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
@@ -85,6 +90,7 @@ public class Reservation {
 	public Reservation(int GuestsNumber, DiningType Space, LocalDateTime Time)
 	{
 		this.GuestsNumber = GuestsNumber;
+		this.Space = new DiningSpace();
 		this.Space.setType(Space);/***********************************************************/
 		this.Time = Time;
 		GuestsSignatures = new ArrayList<HealthReportSignature>();/***********************************/

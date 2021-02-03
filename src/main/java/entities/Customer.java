@@ -59,7 +59,14 @@ public class Customer {
 			this.Address = Address;
 			}
 	
-    public FoodOrder getFoodOrder() {
+    public Customer(String FirstName,String LastName, String Phone,
+			String Email) {
+    	this.FirstName = FirstName;
+		this.LastName =  LastName;
+		this.Phone = Phone;
+		this.Email = Email;
+	}
+	public FoodOrder getFoodOrder() {
 		return foodOrder;
 	}
 	public void setFoodOrder(FoodOrder foodOrder) {

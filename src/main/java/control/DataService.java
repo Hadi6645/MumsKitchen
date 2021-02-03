@@ -36,7 +36,7 @@ private static DataService DataService;
 		ServerInstruction sInstruction = new ServerInstruction(ServerInstructionType.CHECK_UNRESERVED_TABLES, data);
 		// send instruction to the server and get a response	
 		List<table> response = (List<table>)Connector.connectToServer(sInstruction);
-		return response.size() > 0;
+		return response!=null && response.size() > 0;
 	}
 
 	public int sendReservation(Reservation reserve)   // reservation complete 

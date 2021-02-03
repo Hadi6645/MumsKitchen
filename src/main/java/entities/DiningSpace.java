@@ -27,7 +27,12 @@ import enums. DiningType;
 
 @Entity
 @Table(name = "dinningspace")
-public class DiningSpace {
+public class DiningSpace implements java.io.Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@Column(name = "dine_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
