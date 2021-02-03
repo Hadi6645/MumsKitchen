@@ -30,30 +30,51 @@ public class RestaurantMenu implements java.io.Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
-	//@Basic
-//	@Type( type = BaseMenuType.class )
-	@OneToOne
-	BaseMenu common;
 	@OneToOne
 	Menu indvidual;
+	@OneToOne
+	Restaurant restMenu;
 	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public Menu getIndvidual() {
+		return indvidual;
+	}
+
+	public void setIndvidual(Menu indvidual) {
+		this.indvidual = indvidual;
+	}
+
+	public Restaurant getRestMenu() {
+		return restMenu;
+	}
+
+	public void setRestMenu(Restaurant restMenu) {
+		this.restMenu = restMenu;
+	}
+
 	public RestaurantMenu() {
 		
 	}
 	
-	public RestaurantMenu(BaseMenu common,Menu ind) {
-		this.common = common;
+	public RestaurantMenu(Menu ind) {
+		
 		this.indvidual = ind;
 	}
-	public BaseMenu getcommon()
+	public List<Food> getAllFood()
 	{
-		return common;
+		List<Food> allfood = new ArrayList<Food>();
+		//allfood.addAll(this.getCommon().getallfood());
+		allfood.addAll(this.getIndvidual().getallfood());
+		
+		return allfood;
 	}
-	public Menu getindv()
-	{
-		return indvidual;
-	}
-	
 
 	/*public List<Drink> get_drinks(){
 		List <Drink> drinks = new ArrayList<>();

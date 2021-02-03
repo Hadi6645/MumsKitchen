@@ -2,10 +2,12 @@ package entities;
 
 import java.time.LocalDateTime;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -20,6 +22,9 @@ public class Transaction {
 	private int id;
 	private float amount;
 	private LocalDateTime time;
+	@OneToOne(mappedBy="Payment",cascade = {CascadeType.ALL})
+	private FoodOrder foodOrder;
+
 	private int ClientId;
 	private int CreditCardId;
 	
@@ -45,6 +50,17 @@ public class Transaction {
 		this.CreditCardId  = CreditCardId;
 	}
 	
+	public FoodOrder getFoodOrder() {
+		return foodOrder;
+	}
+
+	public void setFoodOrder(FoodOrder foodOrder) {
+		this.foodOrder = foodOrder;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 	public float getAmount()
 	{
 		return amount;

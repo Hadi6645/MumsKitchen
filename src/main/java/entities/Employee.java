@@ -23,6 +23,22 @@ public class Employee {
 	private String lastName;
 	@Enumerated(EnumType.STRING)
 	private EmployeeRole role;
+	private boolean isLoggedIn;
+	public boolean isLoggedIn() {
+		return isLoggedIn;
+	}
+
+	public int getEmployeeNum() {
+		return employeeNum;
+	}
+
+	public void setEmployeeNum(int employeeNum) {
+		this.employeeNum = employeeNum;
+	}
+
+	public void setLoggedIn(boolean isLoggedIn) {
+		this.isLoggedIn = isLoggedIn;
+	}
 
 	public Employee()
 	{
