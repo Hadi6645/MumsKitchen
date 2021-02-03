@@ -43,7 +43,7 @@ public class Menu implements java.io.Serializable{
 	
 	@OneToOne(cascade = {CascadeType.ALL})
 	@JoinColumn(name="menu_id")
-	Restaurant restaurant;
+	private Restaurant restaurant;
 	
 	protected static Session session;
 
@@ -67,6 +67,9 @@ public class Menu implements java.io.Serializable{
 		allfood.add(food);
 		food.addToMenus(this);
 		session.save(food);
+	}
+	public void setMenu_id(int menu_id) {
+		this.menu_id = menu_id;
 	}
 	public int getMenu_id() {
 		return menu_id;

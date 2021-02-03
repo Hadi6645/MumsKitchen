@@ -12,6 +12,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.Session;
+
+import clientServer.Server;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -42,6 +46,7 @@ public class Restaurant implements java.io.Serializable{
 	@OneToOne(mappedBy="restaurant",cascade = {CascadeType.ALL})
 	private Menu restMenu;
 	
+	private static Session session;
 	
 	public Restaurant() {
 		
@@ -71,6 +76,18 @@ public class Restaurant implements java.io.Serializable{
 	}
 
 	
+	public Menu getRestMenu() {
+		return restMenu;
+	}
+
+	public void setRestMenu(Menu resMenu) {
+		session = Server.getSession();
+		this.restMenu = resMenu;
+		restMenu.setRestaurant(this);
+		session.save(restMenu);
+		session.save(this);
+	}
+
 	public String getName()
 	{
 		return Name;
