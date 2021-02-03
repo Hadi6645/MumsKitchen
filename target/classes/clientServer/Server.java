@@ -90,9 +90,10 @@ public class Server extends AbstractServer {
 			App.generateDrinks();
 			App.generateDesserts();
 			App.generateBaseMenu();
-			App.generateResturantMenu();
 			App.generateEmployees();
 			App.generateCompany(); //important to keep in that order.
+			App.generateTables();
+			App.generateDiningspace();
 			App.generateRestaurants();
 			
 			session.getTransaction().commit();
@@ -758,10 +759,10 @@ public class Server extends AbstractServer {
 		restaurants = App.getAllRestaurants();
 		return restaurants;
 	}
-	private List<Food> getMenuFromDB(Object id) //CHANGE to generic later!!!!!
+	private List<Food> getMenuFromDB(Object res) 
 	{
-		int restId = (int) id;
-		return App.getRestaurantFood(restId);
+		int restid = (int) res;
+		return App.getRestaurantFood(restid);
 	}
 
 	@Override
@@ -887,8 +888,6 @@ public class Server extends AbstractServer {
 			System.out.println("Data Fetched, Server On!");
 			server.listen();
 		}
-
-		
 	}
 	
 	public void runTest(Server server) {

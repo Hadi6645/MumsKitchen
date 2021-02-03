@@ -68,6 +68,15 @@ public class PrimaryController {
         	val = newValue;
             System.out.println("ListView Selection Changed (selected: " + newValue + ")");
            try {
+        	   for(Restaurant rest : res)
+               {
+               		if(rest.getName() == val) {
+               			cache.setRestId(rest.getId());
+               			cache.setRestaurant(rest);
+               			System.out.print("rest is : "+rest.getId());
+               		break;
+           		}
+               }
          	  show_Restaurant(null);
  		} catch (IOException e) {
  			// TODO Auto-generated catch block
@@ -75,13 +84,21 @@ public class PrimaryController {
  		}
         });
         
-        for(int i=0; i<res.size();i++) {
+        /*for(Restaurant rest : res)
+        {
+        	if(rest.getName() == val) {
+    			cache.setRestId(rest.getId());
+    			cache.setRestaurant(rest);
+    			System.out.print("rest is : "+rest.getName());
+    		}
+        }*/
+        /*for(int i=0; i<res.size();i++) {
     		if(res.get(i).getName() == val) {
     			My_res = res.get(i);
     			cache.setRestId(My_res.getId());
     			cache.setRestaurant(My_res);
     		}
-    	}
+    	}*/
         
      }
     
