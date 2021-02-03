@@ -2,12 +2,14 @@ package entities;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -27,6 +29,9 @@ public class Customer {
     @ElementCollection(targetClass=CreditCard.class)
 	private List<CreditCard> CreditCard;
 	
+	@OneToOne(cascade = {CascadeType.ALL})
+	@JoinColumn(name="customer_id")
+	FoodOrder foodOrder;
 	public Customer() {
 		
 	}
@@ -54,7 +59,13 @@ public class Customer {
 			this.Address = Address;
 			}
 	
-    public String getFirstName()
+    public FoodOrder getFoodOrder() {
+		return foodOrder;
+	}
+	public void setFoodOrder(FoodOrder foodOrder) {
+		this.foodOrder = foodOrder;
+	}
+	public String getFirstName()
 {
 	return FirstName;
 }
@@ -97,4 +108,7 @@ public class Customer {
   {
 	  return id;
   }
+public void setId(int id) {
+	this.id = id;
+}
 }

@@ -20,6 +20,8 @@ import javax.persistence.Table;
 
 import org.hibernate.Session;
 
+import clientServer.Server;
+
 @Entity
 @Table(name = "food")
 public abstract class Food implements java.io.Serializable{
@@ -61,6 +63,12 @@ public List<Menu> getMenus() {
 }
 public void setMenus(List<Menu> menus) {
 	this.menus = menus;
+}
+public void addToMenus(Menu menu)
+{
+	session = Server.getSession();
+	menus.add(menu);
+	session.save(this);
 }
 public int getID()
 {
