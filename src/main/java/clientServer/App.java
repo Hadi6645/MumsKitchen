@@ -3,6 +3,7 @@ package clientServer;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.sql.Statement;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,7 @@ import org.hibernate.service.ServiceRegistry;
 import entities.Address;
 import entities.BaseMenu;
 import entities.Company;
+import entities.Customer;
 import entities.Dessert;
 import entities.DiningSpace;
 
@@ -551,7 +553,7 @@ public class App
     	Menu resMenu = getBaseMenu();
     	session.save(Address);
     	session.save(Hours);
-    	session.flush();
+    	//session.flush();
     	Restaurant res1 = new Restaurant(Name,Address,Telephone,Staff,Hours,Spaces,resMenu);
     	
     	
@@ -571,7 +573,7 @@ public class App
     	
     	session.save(res1);
     	session.save(res2);
-    	session.flush();
+    	//session.flush();
     	
     	Company mainCompany = getCompany();
     	
@@ -591,6 +593,57 @@ public class App
 		List<Restaurant> data= session.createQuery(query).getResultList();
 		return data;
 	}
+	
+//	public static void generateCustomers() throws Exception
+//	{
+//		session = Server.getSession();
+//		String Name = "Haifa Branch";
+//    	Address Address = new Address("Haifa", "Yefe Nof", 42 );
+//    	String Telephone = "036427130";
+//    	List<Employee> Staff = new ArrayList<>(); 
+//    	OpeningHours Hours = new OpeningHours();
+//    	//Hours.setOpeningHours(int day, LocalTime open, LocalTime close);;
+//    	
+//    	session.save(mainCompany);
+//    	session.flush();
+//	}
+//	
+	public static List<Customer> getAllCustomers()
+	{
+		session = Server.getSession();
+		CriteriaBuilder builder= session.getCriteriaBuilder();
+		CriteriaQuery<Customer> query= builder.createQuery(Customer.class);
+		query.from(Customer.class);
+		List<Customer> data= session.createQuery(query).getResultList();
+		return data;
+	}
+	
+//	public static void generateReservations() throws Exception
+//	{
+//		session = Server.getSession();
+//		String Name = "Haifa Branch";
+//    	Address Address = new Address("Haifa", "Yefe Nof", 42 );
+//    	String Telephone = "036427130";
+//    	List<Employee> Staff = new ArrayList<>(); 
+//    	OpeningHours Hours = new OpeningHours();
+//    	//Hours.setOpeningHours(int day, LocalTime open, LocalTime close);
+//    	//List<DiningSpace> Spaces = new ArrayList<>();
+//    	List<DiningSpace> Spaces = getAllDiningSpace();
+//    	
+//    	
+//    	Menu resMenu = getBaseMenu();
+//    	session.save(Address);
+//    	session.save(Hours);
+//    	//session.flush();
+//    	Restaurant res1 = new Restaurant(Name,Address,Telephone,Staff,Hours,Spaces,resMenu);
+//    	
+//    	List<Restaurant> restaurants = getAllRestaurants();
+//    	LocalDateTime time = LocalDateTime.now();
+//    	
+//    	
+//    	session.save(mainCompany);
+//    	session.flush();
+//	}
 	
 	
 }
