@@ -24,7 +24,6 @@ public class Employee {
 	@Enumerated(EnumType.STRING)
 	private EmployeeRole role;
 	private boolean isLoggedIn;
-
 	public boolean isLoggedIn() {
 		return isLoggedIn;
 	}

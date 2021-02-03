@@ -826,7 +826,34 @@ public class Server extends AbstractServer {
 		int restid = (int) res;
 		return App.getRestaurantFood(restid);
 	}
-
+	private int makeReservation(Object data)
+	{
+		Reservation reservation = (Reservation)data;
+		if(reservation == null) {
+			return -1; 
+		}
+		Customer customer = reservation.getCustomer();
+		customer.setId(this.addToDatabase(customer));
+		this.updateInDatabase(customer);
+		CreditCard creditcard = reservation.getCreditCard();
+		this.addToDatabase(creditcard);
+		int guestsNum = reservation.getGuestsNumber();
+		List<HealthReportSignature> healthList = reservation.getGuestsSignatures();
+		for(HealthReportSignature health :healthList)
+		{
+			addToDatabase(health);
+		}
+		Restaurant rest = reservation.getRestaurant();
+		addToDatabase(rest);
+		DiningSpace dinespace = reservation.getSpace();
+		addToDatabase(dinespace);
+		List<table> tables = reservation.getTables();
+		for(table tab :tables)
+		{
+			addToDatabase(tab);
+		}
+		return this.addToDatabase(reservation);
+	}
 	@Override
 	protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
 		// we need a switch
@@ -896,6 +923,8 @@ public class Server extends AbstractServer {
 				break;
 			case GET_RESTAURANT_BY_EMPLOYEE: response = this.getRestaurantByEmployee(data);
 				break;
+			case MAKE_RESERVATION: response = this.makeReservation(data);
+				break;
 			default:
 				break;
 		}
@@ -948,14 +977,17 @@ public class Server extends AbstractServer {
 			Server server = new Server(Integer.parseInt(args[0]));
 			server.initializeDatabase();
 			System.out.println("Data Fetched, Server On!");
+			
+			runTest(server);
 			server.listen();
 		}
 	}
 	
-	public void runTest(Server server) {
-		LocalDateTime date =  LocalDateTime.now();
-		Reservation resv= new Reservation();
-		server.getReservationTablesList(resv);
+	public static void runTest(Server server) {
+		session = sessionFactory.openSession();
+		session.beginTransaction();
+		server.getRestaurauntsFromDB();
+		session.close();
 	}
 	
 	

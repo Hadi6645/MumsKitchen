@@ -755,11 +755,15 @@ public class App
 	public static void generateRestaurants() throws Exception
 	{
 		session = Server.getSession();
+		List<Employee> employees = getEmployees();
 		String Name = "Haifa Branch";
     	Address Address = new Address("Haifa", "Yefe Nof", 42 );
     	String Telephone = "036427130";
     	List<Employee> Staff = new ArrayList<>(); 
     	OpeningHours Hours = new OpeningHours();
+    	Staff.add(employees.get(5));
+    	Staff.add(employees.get(9));
+    	Staff.add(employees.get(10));
     	//Hours.setOpeningHours(int day, LocalTime open, LocalTime close);
     	//List<DiningSpace> Spaces = new ArrayList<>();
     	List<DiningSpace> Spaces = getAllDiningSpace();
@@ -781,6 +785,8 @@ public class App
     	String Telephone2 = "036427080";
     	List<Employee> Staff2 = new ArrayList<>(); 
     	OpeningHours Hours2 = new OpeningHours();
+    	Staff2.add(employees.get(2));
+    	Staff2.add(employees.get(6));
     	//Hours.setOpeningHours(int day, LocalTime open, LocalTime close);
     	//List<DiningSpace> Spaces2 = new ArrayList<>();
     	//List<DiningSpace> Spaces2 = getAllDiningSpace();
@@ -805,6 +811,8 @@ public class App
     	//Hours.setOpeningHours(int day, LocalTime open, LocalTime close);
     	//List<DiningSpace> Spaces2 = new ArrayList<>();
     	//List<DiningSpace> Spaces2 = getAllDiningSpace();
+    	Staff3.add(employees.get(3));
+    	Staff3.add(employees.get(7));
     	session.save(Address3);
     	session.save(Hours3);
     	Menu majdalShamsMenu = generateMajdalShamsMenu();
@@ -826,6 +834,8 @@ public class App
     	//Hours.setOpeningHours(int day, LocalTime open, LocalTime close);
     	//List<DiningSpace> Spaces2 = new ArrayList<>();
     	//List<DiningSpace> Spaces2 = getAllDiningSpace();
+    	Staff4.add(employees.get(4));
+    	Staff4.add(employees.get(8));
     	session.save(Address4);
     	session.save(Hours4);
     	Menu akkoMenu = generateAkkoMenu();
