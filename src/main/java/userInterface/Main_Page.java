@@ -47,7 +47,7 @@ public class Main_Page {
 
     @FXML
     void complaint_act(ActionEvent event) throws IOException {
-    	 App.setRoot("Complaint");
+    	 App.setRoot("Complaint_");
     }
 
     @FXML

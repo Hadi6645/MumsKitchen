@@ -59,7 +59,8 @@ public class Reservation {
     void confirm_act(ActionEvent event) throws IOException {
     	Thread buttonThread = new Thread(new Runnable() {
 			public void run() {
-    	entities.Reservation reser = new entities.Reservation(Integer.parseInt(guest_number.getText()), space_type, localdatetime);
+		entities.Reservation reser = new entities.Reservation(Integer.parseInt(guest_number.getText()), space_type, localdatetime);
+		
     	reser.setRestaurant(cache.getRestaurant());
     	cache.setReservation(reser);
     	DataService data = DataService.getDataService();

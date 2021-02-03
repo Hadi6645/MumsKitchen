@@ -1,6 +1,8 @@
 package control;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Future;
 
 import entities.Complaint;
 import entities.ComplaintsReport;
@@ -18,6 +20,7 @@ public class DataService {
 	
 private static DataService DataService;
 	
+
 	private DataService() {
 		
 	}
@@ -34,9 +37,10 @@ private static DataService DataService;
 	{
 		Reservation data= res;
 		ServerInstruction sInstruction = new ServerInstruction(ServerInstructionType.CHECK_UNRESERVED_TABLES, data);
-		// send instruction to the server and get a response	
-		List<table> response = (List<table>)Connector.connectToServer(sInstruction);
-		return response!=null && response.size() > 0;
+		//send instruction to the server and get a response	
+		boolean response = (boolean)Connector.connectToServer(sInstruction);
+		//return response!=null && response.size() > 0;
+		return response;
 	}
 
 	public int sendReservation(Reservation reserve)   // reservation complete 

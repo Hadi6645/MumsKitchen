@@ -23,8 +23,12 @@ import clientServer.Server;
 
 @Entity
 @Table(name = "tables")
-public class table {
+public class table implements java.io.Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	int tables_id;

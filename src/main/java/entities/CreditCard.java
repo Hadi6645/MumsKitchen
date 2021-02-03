@@ -11,7 +11,11 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "creditcard")
-public class CreditCard {
+public class CreditCard implements java.io.Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
