@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.Session;
@@ -39,7 +40,11 @@ public class Menu implements java.io.Serializable{
 			joinColumns = @JoinColumn(name = "menu_id"),
 			inverseJoinColumns = @JoinColumn(name = "food_id"))
 	private List<Food> allfood;
-
+	
+	@OneToOne(cascade = {CascadeType.ALL})
+	@JoinColumn(name="menu_id")
+	Restaurant restaurant;
+	
 	protected static Session session;
 
 
@@ -51,10 +56,17 @@ public class Menu implements java.io.Serializable{
 		// TODO Auto-generated constructor stub
 		 allfood = foodList;
 	}
+	public Restaurant getRestaurant() {
+		return restaurant;
+	}
+	public void setRestaurant(Restaurant restMenu) {
+		this.restaurant = restMenu;
+	}
 	public void addfood(Food food) {
-		session = Server.getSession();
+		session= Server.getSession();
 		allfood.add(food);
-		session.save(allfood);
+		food.addToMenus(this);
+		session.save(food);
 	}
 	public int getMenu_id() {
 		return menu_id;
@@ -66,10 +78,12 @@ public class Menu implements java.io.Serializable{
 	}
 	public void setallfood(List<Food> allfood)
 	{
+		session= Server.getSession();
 		for(Food food : allfood)
 		{
 			this.allfood.add(food);
-			food.getMenus().add(this);
+			food.addToMenus(this);
+			session.save(food);
 		}
 	}
 }

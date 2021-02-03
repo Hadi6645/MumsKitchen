@@ -1,5 +1,6 @@
 package entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -34,6 +35,23 @@ public class Ingredients {
 			targetEntity = Meal.class
 	)
 	List<Food> optionalFoodList;
+	
+	public List<Food> getBaseFoodList() {
+		return baseFoodList;
+	}
+
+	public void setBaseFoodList(List<Food> baseFoodList) {
+		this.baseFoodList = baseFoodList;
+	}
+
+	public List<Food> getOptionalFoodList() {
+		return optionalFoodList;
+	}
+
+	public void setOptionalFoodList(List<Food> optionalFoodList) {
+		this.optionalFoodList = optionalFoodList;
+	}
+
 	public Ingredients() {
 		super();
 	}
@@ -42,6 +60,8 @@ public class Ingredients {
 	{
 		super();
 		this.name = name;
+		baseFoodList = new ArrayList<Food>(); 
+		optionalFoodList = new ArrayList<Food>();
 	}
 	public int getId()
 	{
