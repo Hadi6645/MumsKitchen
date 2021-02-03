@@ -1,6 +1,7 @@
 package entities;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -31,12 +32,43 @@ public class Reservation {
 	private LocalDateTime Time;
 	@OneToOne
 	private CreditCard CreditCard;
+	
 	private Status Status;
 	private List<HealthReportSignature> GuestsSignatures;
 
 	@Column
     @ElementCollection(targetClass=table.class)
 	private List<table> tables;
+	
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public void setCustomer(Customer customer) {
+		Customer = customer;
+	}
+
+	public void setGuestsNumber(int guestsNumber) {
+		GuestsNumber = guestsNumber;
+	}
+
+	public void setRestaurant(Restaurant restaurant) {
+		Restaurant = restaurant;
+	}
+
+	public void setSpace(DiningSpace space) {
+		Space = space;
+	}
+
+	public void setTime(LocalDateTime time) {
+		Time = time;
+	}
+
+	public void setCreditCard(CreditCard creditCard) {
+		CreditCard = creditCard;
+	}
+
+	
 	
 	public List<table> getTables() {
 		return tables;
@@ -55,6 +87,7 @@ public class Reservation {
 		this.GuestsNumber = GuestsNumber;
 		this.Space.setType(Space);/***********************************************************/
 		this.Time = Time;
+		GuestsSignatures = new ArrayList<HealthReportSignature>();/***********************************/
 	}
 	
 	public Reservation(int id, Customer Customer, int GuestsNumber,DiningSpace Space, List<table> tables, LocalDateTime Time,  CreditCard CreditCard, Status Status, List<HealthReportSignature> GuestsSignatures , Restaurant Restaurant)
@@ -130,7 +163,7 @@ public class Reservation {
 			return GuestsSignatures;
 		}
 
-		public void setGuestsSignatures(List<HealthReportSignature> guestsSignatures) {
-			this.GuestsSignatures = guestsSignatures;
+		public void addtoGuestsSignatures(HealthReportSignature guestsSignatures) {
+			GuestsSignatures.add(guestsSignatures);
 		}
 }

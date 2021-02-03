@@ -2,15 +2,63 @@ package control;
 
 import java.util.List;
 
+import entities.Dessert;
 import entities.DiningSpace;
+import entities.Drink;
 import entities.Food;
+import entities.FoodOrder;
+import entities.Meal;
 import entities.Menu;
+import entities.Reservation;
 import entities.Restaurant;
 
 public class Cache {
+	Meal current_meal;///////////////////////////////
+	Drink current_drink;
+	Dessert current_dessert;
+	Food current_food;
+	public Food getCurrent_food() {
+		return current_food;
+	}
+	public void setCurrent_food(Food current_food) {
+		this.current_food = current_food;
+	}
+	FoodOrder foodorder;/////////////////////////////
+	int restaurantId;
 	
-	int restaurantId; 
+	public Meal getCurrent_meal() {
+		return current_meal;
+	}
+	public void setCurrent_meal(Meal current_meal) {
+		this.current_meal = current_meal;
+	}
+	public Drink getCurrent_drink() {
+		return current_drink;
+	}
+	public void setCurrent_drink(Drink current_drink) {
+		this.current_drink = current_drink;
+	}
+	public Dessert getCurrent_dessert() {
+		return current_dessert;
+	}
+	public void setCurrent_dessert(Dessert current_desert) {
+		this.current_dessert = current_desert;
+	}
 	Restaurant restaurant;
+	Reservation reservation;
+	
+	public FoodOrder getFoodorder() {
+		return foodorder;
+	}
+	public void setFoodorder(FoodOrder foodorder) {
+		this.foodorder = foodorder;
+	}
+	public Reservation getReservation() {
+		return reservation;
+	}
+	public void setReservation(Reservation reservation) {
+		this.reservation = reservation;
+	}
 	List<Restaurant> cachedRestaurants;
 	Menu cachedMenu;
 	List<Food> cachedFood;

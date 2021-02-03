@@ -4,13 +4,13 @@
 
 package userInterface;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Locale;
 
 import control.Cache;
+import control.DataService;
 import entities.Restaurant;
 import enums.DiningType;
 import javafx.collections.FXCollections;
@@ -51,15 +51,40 @@ public class Reservation {
     //  private static LocalTime val;
       private LocalTime choosen_time;
       private LocalDateTime localdatetime;
+      Cache cache = Cache.getCache();
       
     
     
-    
     @FXML
-    void confirm_act(ActionEvent event) {
-    //	entities.Reservation reser = new entities.Reservation(Integer.parseInt(guest_number.getText()), space_type, localdatetime);
-   	// System.out.println("hallllooooooossssss");
-    }
+    void confirm_act(ActionEvent event) throws IOException {
+    	Thread buttonThread = new Thread(new Runnable() {
+			public void run() {
+    	entities.Reservation reser = new entities.Reservation(Integer.parseInt(guest_number.getText()), space_type, localdatetime);
+    	reser.setRestaurant(cache.getRestaurant());
+    	cache.setReservation(reser);
+    	DataService data = DataService.getDataService();
+    	if(data.checReservationTables(reser)) {
+    		 try {
+				App.setRoot("InsertInformations");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	}
+    	else {
+    		try {
+				App.setRoot("ChangeReservationHour");
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	}
+			}
+			
+    });
+    	buttonThread.start();
+ }
 
     @FXML
     void inside_func(ActionEvent event) {
@@ -79,7 +104,7 @@ public class Reservation {
     	LocalTime closehour;
     	LocalTime newhour;
     	int daynum=0 ;
-    	Cache cache = Cache.getCache();
+    //	Cache cache = Cache.getCache();
     	Restaurant res = cache.getRestaurant();
     	LocalTime[][] opening = res.getOpeningHours().getOpeningHours();
     	System.out.println("hallllooooooossssss");
@@ -88,7 +113,6 @@ public class Reservation {
     	/*DateTimeFormatter format = DateTimeFormatter.ofPattern("EEEE", Locale.getDefault());
     	System.out.println(day.format(format));
     	dayName = day.format(format);
-    	//System.out.println("hallllooooooossssss");
     	if(dayName == "Sunday") daynum=1;
     	else if(dayName == "Monday") daynum = 2;
     	else if(dayName == "Tuesday") daynum = 3;
@@ -132,7 +156,7 @@ public class Reservation {
            choosen_time = newValue;
         });
         
-    	
+    	//localdatetime = new LocalDateTime(day, choosen_time);
     	localdatetime = localdatetime.withDayOfMonth(day.getDayOfMonth());
     	localdatetime = localdatetime.withMonth(day.getMonthValue());
     	localdatetime = localdatetime.withYear(day.getYear());

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="500.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="userInterface.InsertInformations">
+   <children>
+      <Label layoutX="13.0" layoutY="61.0" text="First Name" />
+      <Label layoutX="14.0" layoutY="97.0" text="Last Name" />
+      <Label layoutX="11.0" layoutY="139.0" text="Phone Number" />
+      <Label layoutX="14.0" layoutY="177.0" text="Email Address" />
+      <Label layoutX="15.0" layoutY="215.0" text="Card Number" />
+      <Label layoutX="17.0" layoutY="253.0" text="CVV" />
+      <Label layoutX="11.0" layoutY="290.0" text="Expiration Date" />
+      <DatePicker fx:id="expirationDate" layoutX="175.0" layoutY="286.0" prefHeight="25.0" prefWidth="149.0" />
+      <Label layoutX="11.0" layoutY="357.0" prefHeight="17.0" prefWidth="156.0" text="Filling Health Declaration" />
+      <ListView fx:id="Helth_list" layoutX="176.0" layoutY="329.0" prefHeight="74.0" prefWidth="200.0" />
+      <Button layoutX="343.0" layoutY="434.0" mnemonicParsing="false" onAction="#ConfirmReservation" text="Confirm Reservation" />
+      <TextField fx:id="first_name" layoutX="175.0" layoutY="57.0" />
+      <TextField fx:id="last_name" layoutX="175.0" layoutY="93.0" />
+      <TextField fx:id="phone" layoutX="176.0" layoutY="135.0" />
+      <TextField fx:id="email" layoutX="175.0" layoutY="173.0" />
+      <TextField fx:id="cardNumber" layoutX="176.0" layoutY="211.0" />
+      <TextField fx:id="cvv" layoutX="175.0" layoutY="249.0" />
+      <Text fill="#fe0000" layoutX="13.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Insert Customer Informations :" wrappingWidth="288.0000712076823">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Text>
+      <Button layoutX="28.0" layoutY="434.0" mnemonicParsing="false" onAction="#backtoMain" text="Back To The Main Page" />
+      <Text fx:id="no_confirmation" layoutX="354.0" layoutY="482.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="102.80340576171875" />
+   </children>
+</AnchorPane>

@@ -54,6 +54,18 @@ public class Customer {
 			this.Address = Address;
 			}
 	
+	
+	public Customer(String FirstName,String LastName, String Phone,
+			String Email)
+			{
+			this.FirstName = FirstName;
+			this.LastName =  LastName;
+			this.Phone = Phone;
+			this.Email = Email;
+			}
+	
+	
+	
     public String getFirstName()
 {
 	return FirstName;
